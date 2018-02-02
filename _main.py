@@ -11,13 +11,14 @@ def unpack_url_data(file_name):
     # print(url_data)
     return url_data
 
-def fetch_soup(url_data):
-    pass
-    # session = requests.Session()
-    # response = session.get(url)
-    # html = response.content
-    # soup = bs.BeautifulSoup(html, "lxml")
-    # return soup
+def fetch_soup(url):
+    session = requests.Session()
+    response = session.get(url)
+    html = response.content
+    soup = bs.BeautifulSoup(html, "lxml")
+    return soup
+
+
 
 
 
@@ -32,4 +33,4 @@ if __name__ == "__main__":
 
     soup = fetch_soup("".join(url_data))
 
-    # test_connection(soup)
+    test_connection(soup)
