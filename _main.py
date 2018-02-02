@@ -24,8 +24,7 @@ def fetch_links(soup):
 
 def parse_by_pages(url_data, min_page=0, max_page=9999):
     url = "".join(url_data) + str(min_page)
-    soup = fetch_soup(url)
-    fetch_links(soup)
+    fetch_links(fetch_soup(url))
 
 
 def test_connection(soup):
