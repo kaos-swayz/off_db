@@ -22,6 +22,10 @@ def fetch_links(soup):
     for link in soup.find_all("a", {"class": "rmb-object-list-item"}):
         print("".join(url_data[0] + link.get("href")))
 
+def parse_by_pages(url_data, min_page=0, max_page=9999):
+    url = "".join(url_data) + str(min_page)
+    soup = fetch_soup(url)
+    fetch_links(soup)
 
 
 def test_connection(soup):
@@ -33,8 +37,7 @@ if __name__ == "__main__":
     url_data = unpack_url_data("url_data.txt")
     # print("".join(url_data))
 
-    soup = fetch_soup("".join(url_data))
-    fetch_links(soup)
+    parse_by_pages(url_data)
 
 
     # test_connection(soup)
