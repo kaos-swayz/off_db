@@ -18,7 +18,9 @@ def fetch_soup(url):
     soup = bs.BeautifulSoup(html, "lxml")
     return soup
 
-
+def fetch_links(soup):
+    for link in soup.find_all("a", {"class": "rmb-object-list-item"}):
+        print("".join(url_data[0] + link.get("href")))
 
 
 
@@ -32,5 +34,7 @@ if __name__ == "__main__":
     # print("".join(url_data))
 
     soup = fetch_soup("".join(url_data))
+    fetch_links(soup)
 
-    test_connection(soup)
+
+    # test_connection(soup)
