@@ -29,7 +29,7 @@ def fetch_property(soup, output_list, el_name, property_name):
     property_value = soup.find("h1").get(property_name)
     output_list.append(property_value)
 
-def fetch_all_data(soup):
+def fetch_all_raw_data(soup):
     output = []
     fetch_property(soup, output_list=output, el_name="h1", property_name="data-id")
     fetch_element(soup, output_list=output, el_name="h1", css_class_name="h3")
@@ -37,13 +37,18 @@ def fetch_all_data(soup):
     fitout_disabled = []
     fetch_element(soup, output_list=fitout_disabled, el_name="span", css_class_name="rmb-details-list-disabled")
     output.append(fitout_disabled)
-
-    for e in output:
-        print(e)
+    return output
 
 def parse_by_links(url_data_list):
+    output = []
+    n = 0
     for e in url_data_list:
-        pass
+        output.append(fetch_all_raw_data(fetch_soup(e)))
+        n += 1
+        if n == 5:
+            break
+    for e in output:
+        print(e)
 
 
 
@@ -56,6 +61,9 @@ if __name__ == "__main__":
 
     # parse_by_pages(url_data, min_page=0, max_page=94)
 
-    soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
-    fetch_all_data(soup)
+
+    url_data = unpack_url_data(output_urls)
+    parse_by_links(url_data)
+    # soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
+    # fetch_all_raw_data(soup)
 
