@@ -13,11 +13,11 @@ def fetch_links(soup, output_file_name="urls_output.txt"):
         with open(output_file_name, "a", encoding="UTF-8") as fp:
             fp.write(url + "\n")
 
-def parse_by_pages(url_data_list, min_page=0, max_page=9999):
+def parse_by_pages(url_data_list, min_page=0, max_page=9999, output_url_list="urls_output"):
     for i in range(min_page, max_page):
         # code generates url by joining all parts of url_data list
         url = "".join(url_data_list) + str(i)
-        fetch_links(fetch_soup(url),output_urls)
+        fetch_links(fetch_soup(url),output_url_list)
 
 
 
@@ -45,10 +45,12 @@ def parse_by_links(url_data_list):
     for e in url_data_list:
         output.append(fetch_all_raw_data(fetch_soup(e)))
         n += 1
-        if n == 5:
+        if n == 75:
             break
     for e in output:
         print(e)
+        print(len(e))
+
 
 
 
@@ -59,7 +61,7 @@ if __name__ == "__main__":
 
     # url_data = unpack_url_data(input_file_name)
 
-    # parse_by_pages(url_data, min_page=0, max_page=94)
+    # parse_by_pages(url_data, min_page=0, max_page=94, output_urls)
 
 
     url_data = unpack_url_data(output_urls)
