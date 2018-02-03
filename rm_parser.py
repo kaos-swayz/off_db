@@ -21,9 +21,14 @@ def parse_by_pages(url_data_list, min_page=0, max_page=9999):
 
 
 
-def fetch_element(soup):
-    for e in soup.find_all("div", {"class": "rmb-details-list-item"}):
-        print(e.string)
+def fetch_element(soup, output_list, el_name, css_class_name):
+    for e in soup.find_all(el_name, {"class": css_class_name}):
+        output_list.append(e.text.replace("\n", ""))
+
+def fetch_all_data(soup):
+    output = []
+    fetch_element(soup, output_list=output, el_name="div", css_class_name="rmb-details-list-item")
+    print(output)
 
 def parse_by_links(url_data_list):
     for e in url_data_list:
@@ -36,6 +41,10 @@ if __name__ == "__main__":
     input_file_name = "url_data_set1.txt"
     output_urls = "urls_output_set1.txt"
 
-    url_data = unpack_url_data(input_file_name)
+    # url_data = unpack_url_data(input_file_name)
 
-    parse_by_pages(url_data, min_page=0, max_page=94)
+    # parse_by_pages(url_data, min_page=0, max_page=94)
+
+    soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
+    fetch_all_data(soup)
+
