@@ -26,11 +26,12 @@ def fetch_element(soup, output_list, el_name, css_class_name):
         output_list.append(e.text.replace("\n", ""))
 
 def fetch_property(soup, output_list, el_name, property_name):
-    el = soup.find("h1")
-    print(el)
+    property_value = soup.find("h1").get(property_name)
+    output_list.append(property_value)
 
 def fetch_all_data(soup):
     output = []
+    fetch_property(soup, output_list=output, el_name="h1", property_name="data-id")
     fetch_element(soup, output_list=output, el_name="h1", css_class_name="h3")
     fetch_element(soup, output_list=output, el_name="div", css_class_name="rmb-details-list-item")
     fitout_disabled = []
