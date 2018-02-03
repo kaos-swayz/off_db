@@ -25,10 +25,18 @@ def fetch_element(soup, output_list, el_name, css_class_name):
     for e in soup.find_all(el_name, {"class": css_class_name}):
         output_list.append(e.text.replace("\n", ""))
 
+
+
 def fetch_all_data(soup):
     output = []
+    fetch_element(soup, output_list=output, el_name="h1", css_class_name="h3")
     fetch_element(soup, output_list=output, el_name="div", css_class_name="rmb-details-list-item")
-    print(output)
+    fitout_disabled = []
+    fetch_element(soup, output_list=fitout_disabled, el_name="span", css_class_name="rmb-details-list-disabled")
+    output.append(fitout_disabled)
+
+    for e in output:
+        print(e)
 
 def parse_by_links(url_data_list):
     for e in url_data_list:
