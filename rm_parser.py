@@ -1,6 +1,7 @@
 from _main import unpack_url_data, fetch_soup, test_connection
 
 import requests
+import json
 
 import bs4 as bs
 
@@ -29,9 +30,10 @@ def fetch_property(soup, output_list, el_name, property_name):
     property_value = soup.find("h1").get(property_name)
     output_list.append(property_value)
 
-def fetch_all_raw_data(soup):
+def fetch_all_raw_data(soup, url):
     output = []
     fetch_property(soup, output_list=output, el_name="h1", property_name="data-id")
+    output.append(url)
     fetch_element(soup, output_list=output, el_name="h1", css_class_name="h3")
     fetch_element(soup, output_list=output, el_name="div", css_class_name="rmb-details-list-item")
     fitout_disabled = []
@@ -39,17 +41,16 @@ def fetch_all_raw_data(soup):
     output.append(fitout_disabled)
     return output
 
-def parse_by_links(url_data_list):
+def parse_by_links(url_data_list, output_file_name="raw_data.txt"):
     output = []
     n = 0
     for e in url_data_list:
-        output.append(fetch_all_raw_data(fetch_soup(e)))
+        output.append(fetch_all_raw_data(fetch_soup(e), url=e))
         n += 1
-        if n == 75:
+        if n == 3:
             break
-    for e in output:
-        print(e)
-        print(len(e))
+    with open(output_file_name, "w") as f:
+        f.write(json.dumps(output))
 
 
 
@@ -58,6 +59,7 @@ def parse_by_links(url_data_list):
 if __name__ == "__main__":
     input_file_name = "url_data_set1.txt"
     output_urls = "urls_output_set1.txt"
+    output_raw_data = "raw_data_set1.txt"
 
     # url_data = unpack_url_data(input_file_name)
 
