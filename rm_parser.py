@@ -55,12 +55,12 @@ def fetch_all_raw_data(soup, url):
 
 def parse_by_links(url_data_list, output_file_name="raw_data.txt"):
     output = []
-    n = 0
+    # n = 0
     for e in url_data_list:
         output.append(fetch_all_raw_data(fetch_soup(e), url=e))
-        n += 1
-        if n == 3:
-            break
+        # n += 1
+        # if n == :
+        #     break
     with open(output_file_name, "w") as f:
         f.write(json.dumps(output))
 
