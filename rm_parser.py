@@ -26,8 +26,8 @@ def fetch_element(soup, output_list, el_name, css_class_name):
     for e in soup.find_all(el_name, {"class": css_class_name}):
         output_list.append(e.text.replace("\n", ""))
 
-def fetch_property(soup, output_list, el_name, property_name):
-    property_value = soup.find("h1").get(property_name)
+def fetch_property(soup, output_list, el_name, property_name, id_name=None, id_value=None):
+    property_value = soup.find(el_name, {id_name: id_value}).get(property_name)
     output_list.append(property_value)
 
 def fetch_all_raw_data(soup, url):
