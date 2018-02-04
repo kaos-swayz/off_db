@@ -32,13 +32,25 @@ def fetch_property(soup, output_list, el_name, property_name, id_name=None, id_v
 
 def fetch_all_raw_data(soup, url):
     output = []
+
+    #id
     fetch_property(soup, output_list=output, el_name="h1", property_name="data-id")
-    output.append(url)
+    #name
     fetch_element(soup, output_list=output, el_name="h1", css_class_name="h3")
+    #url
+    output.append(url)
+    #img url
+    temp_list = []
+    fetch_property(soup, output_list=temp_list, el_name="div", property_name="data-bg", id_name="class",
+                   id_value="rmb-object-slide")
+    output.append(url_base[0] + temp_list[0])
+    #all data
     fetch_element(soup, output_list=output, el_name="div", css_class_name="rmb-details-list-item")
+    #disabled fit-out elements
     fitout_disabled = []
     fetch_element(soup, output_list=fitout_disabled, el_name="span", css_class_name="rmb-details-list-disabled")
     output.append(fitout_disabled)
+
     return output
 
 def parse_by_links(url_data_list, output_file_name="raw_data.txt"):
@@ -65,9 +77,9 @@ if __name__ == "__main__":
 
     # parse_by_pages(url_data, min_page=0, max_page=94, output_urls)
 
-
-    url_data = unpack_url_data(output_urls)
-    parse_by_links(url_data)
+    url_base = unpack_url_data(input_file_name)
+    urls = unpack_url_data(output_urls)
+    parse_by_links(urls)
     # soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
     # fetch_all_raw_data(soup)
 
