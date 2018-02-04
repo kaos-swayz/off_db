@@ -9,7 +9,7 @@ import bs4 as bs
 
 def fetch_links(soup, output_file_name="urls_output.txt"):
     for link in soup.find_all("a", {"class": "rmb-object-list-item"}):
-        url = "".join(url_data[0] + link.get("href"))
+        url = "".join(url_base[0] + link.get("href"))
         print(url)
         with open(output_file_name, "a", encoding="UTF-8") as fp:
             fp.write(url + "\n")
@@ -73,11 +73,10 @@ if __name__ == "__main__":
     output_urls = "urls_output_set1.txt"
     output_raw_data = "raw_data_set1.txt"
 
-    # url_data = unpack_url_data(input_file_name)
-
-    # parse_by_pages(url_data, min_page=0, max_page=94, output_urls)
-
     url_base = unpack_url_data(input_file_name)
+    # parse_by_pages(url_base, min_page=0, max_page=94, output_urls)
+
+
     urls = unpack_url_data(output_urls)
     parse_by_links(urls)
     # soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
