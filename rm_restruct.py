@@ -6,6 +6,12 @@ def open_data(file_name):
 
     return data
 
+def restruct_data(data):
+    output = []
+    for e in data:
+        item = {}
+        output.append(item)
+    return output
 
 
 
@@ -13,5 +19,6 @@ def open_data(file_name):
 
 
 if __name__ == "__main__":
-    for e in open_data("raw_data.txt"):
-        print(e)
+    data = open_data("raw_data.txt")
+    restructed_data = restruct_data(data)
+    print(len(restructed_data))
