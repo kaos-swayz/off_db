@@ -15,16 +15,18 @@ def restruct_data(data):
         item["01.main_data"]["name"] = e[1]
         item["01.main_data"]["type"] = get_type(e[1])
 
-        item["09.metadata"] = {}
-        item["09.metadata"]["remobile_id"] = e[0]
-        item["09.metadata"]["remobile_url"] = e[2]
-        item["09.metadata"]["remobile_pic_url"] = e[3]
-
         # raw version
         item["02.location_details"] = {}
         item["02.location_details"]["city"] = e[4]
         item["02.location_details"]["district"] = e[2]
         item["02.location_details"]["city"] = e[4]
+
+
+
+        item["09.metadata"] = {}
+        item["09.metadata"]["remobile_id"] = e[0]
+        item["09.metadata"]["remobile_url"] = e[2]
+        item["09.metadata"]["remobile_pic_url"] = e[3]
 
 
         output.append(item)
@@ -37,6 +39,13 @@ def get_type(e):
         return "sublease"
     else:
         return "lease"
+
+
+
+
+
+
+
 
 
 
