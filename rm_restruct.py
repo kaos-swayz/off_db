@@ -13,7 +13,7 @@ def restruct_data(data):
 
         item["01.main_data"] = {}
         item["01.main_data"]["name"] = e[1]
-        item["01.main_data"]["type"] = get_sublease(e[1])
+        item["01.main_data"]["type"] = get_type(e[1])
 
         item["09.metadata"] = {}
         item["09.metadata"]["remobile_id"] = e[0]
@@ -30,7 +30,7 @@ def restruct_data(data):
         output.append(item)
     return output
 
-def get_sublease(e):
+def get_type(e):
     if "podnajem" in e:
         return "sublease"
     elif "Podnajem" in e:
