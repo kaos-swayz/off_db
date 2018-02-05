@@ -15,11 +15,10 @@ def restruct_data(data):
         item["01.main_data"]["name"] = e[1]
         item["01.main_data"]["type"] = get_type(e[1])
 
-        # raw version
         item["02.location_details"] = {}
-        item["02.location_details"]["city"] = e[4]
-        item["02.location_details"]["district"] = e[2]
-        item["02.location_details"]["city"] = e[4]
+        item["02.location_details"]["city"] = get_city(e[4])
+        item["02.location_details"]["district"] = get_district(e[2])
+        item["02.location_details"]["address"] = get_address(e[4])
 
 
 
@@ -40,8 +39,18 @@ def get_type(e):
     else:
         return "lease"
 
+def get_city(e):
+    return e[:e.find(",")]
 
+def get_district(e):
+    if "warszawa" in e:
+        loc = e.find("warszawa")
+        return e[loc+9:e.find("/",loc)]
+    else:
+        return ""
 
+def get_address(e):
+    return e[e.find(",") + 2:]
 
 
 
