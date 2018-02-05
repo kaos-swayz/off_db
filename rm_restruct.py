@@ -8,7 +8,14 @@ def open_data(file_name):
 
 def restruct_data(data):
     output = []
+    for e in data:
+        item = {}
+        item["09.metadata"] = {}
+        item["09.metadata"]["remobile_id"] = e[0]
+        item["09.metadata"]["remobile_url"] = e[2]
 
+
+        output.append(item)
     return output
 
 
