@@ -59,7 +59,9 @@ def check_podnajem(data):
             print(e)
     print("podnajem_count: {}".format(podnajem_count))
 
-
+def check_restructed_all(r_data):
+    for e in r_data:
+        print(e)
 
 
 if __name__ == "__main__":
@@ -72,4 +74,4 @@ if __name__ == "__main__":
     restructed_data = restruct_data(data)
     print(len(restructed_data))
 
-    # check_restructed_all(restructed_data)
+    check_restructed_all(restructed_data)
