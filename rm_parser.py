@@ -31,6 +31,8 @@ def fetch_property(soup, output_list, el_name, property_name, id_name=None, id_v
     output_list.append(property_value)
 
 def fetch_all_raw_data(soup, url):
+    print("fetching data from: " + url)
+
     output = []
 
     #id
@@ -41,9 +43,13 @@ def fetch_all_raw_data(soup, url):
     output.append(url)
     #img url
     temp_list = []
-    fetch_property(soup, output_list=temp_list, el_name="div", property_name="data-bg", id_name="class",
+    try:
+        fetch_property(soup, output_list=temp_list, el_name="div", property_name="data-bg", id_name="class",
                    id_value="rmb-object-slide")
-    output.append(url_base[0] + temp_list[0])
+        output.append(url_base[0] + temp_list[0])
+    except AttributeError as err:
+        print("An error: {} have occured on url: {}".format(err, url))
+        output.append(temp_list)
     #all data
     fetch_element(soup, output_list=output, el_name="div", css_class_name="rmb-details-list-item")
     #disabled fit-out elements
