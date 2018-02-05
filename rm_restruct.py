@@ -16,7 +16,7 @@ def restruct_data(data):
         if "podnajem" not in e[1]:
             item["01.main_data"]["type"] = ["lease"]
         else:
-            item["01.main_data"]["type"] = ["lease"]
+            item["01.main_data"]["type"] = ["sublease"]
 
         item["09.metadata"] = {}
         item["09.metadata"]["remobile_id"] = e[0]
@@ -74,4 +74,4 @@ if __name__ == "__main__":
     restructed_data = restruct_data(data)
     print(len(restructed_data))
 
-    check_restructed_all(restructed_data)
+    # check_restructed_all(restructed_data)
