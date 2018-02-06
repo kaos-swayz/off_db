@@ -37,6 +37,18 @@ def restruct_data(data):
 
         item["04.building_details"] = {}
         item["04.building_details"]["building_status"] = get_index(e[index_by_input(e, "Building status".lower())],16)
+        item["04.building_details"]["building_class"] = get_index(e[index_by_input(e, "Building class".lower())],15)
+        item["04.building_details"]["total_net_space"] = get_digit(e[index_by_input(e, "Total net office space".lower())])
+        item["04.building_details"]["total_gross_space"] = get_digit(e[index_by_input(e, "Total gross office space".lower())])
+        item["04.building_details"]["completion_date"] = get_index(e[index_by_input(e, "Building completion date".lower())],25)
+        item["04.building_details"]["ground_floors"] = get_digit(e[index_by_input(e, "Above-ground floors".lower())])
+        item["04.building_details"]["floor_plate"] = get_digit(e[index_by_input(e, "Typical floor size".lower())])
+        item["04.building_details"]["no_surface_parking"] = get_digit(e[index_by_input(e, "Number of surface parking spaces".lower())])
+        item["04.building_details"]["no_underground_parking"] = get_digit(e[index_by_input(e, "Number of underground parking spaces".lower())])
+        item["04.building_details"]["parking_ratio"] = get_digit(e[index_by_input(e, "Parking ratio".lower())]).replace("place ", "").replace(" of the leased space","")
+
+
+
 
 
         item["09.metadata"] = {}
