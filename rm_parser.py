@@ -56,6 +56,9 @@ def fetch_all_raw_data(soup, url):
     fitout_disabled = []
     fetch_element(soup, output_list=fitout_disabled, el_name="span", css_class_name="rmb-details-list-disabled")
     output.append(fitout_disabled)
+    # empty string for debuging reasons
+    empty_string = ""
+    output.append(empty_string)
 
     return output
 
