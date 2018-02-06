@@ -28,9 +28,12 @@ def restruct_data(data):
         item["03.offer_details"]["rent_office"] = get_digit(e[index_by_input(e, "Asking rent for office space".lower())])
         item["03.offer_details"]["rent_retail"] = get_digit(e[index_by_input(e, "Asking rent for retail space".lower())])
         item["03.offer_details"]["rent_warehouse"] = get_digit(e[index_by_input(e, "Asking rent for industrial space".lower())])
-        item["03.offer_details"]["service_charge"] = get_digit(e[index_by_input(e, "Service charge".lower())]).replace(" / month ","")
+        item["03.offer_details"]["service_charge"] = get_digit(e[index_by_input(e, "Service charge".lower())]).replace(" / month","")
         item["03.offer_details"]["cost_parking_surface"] = get_digit(e[index_by_input(e, "Surface parking rent".lower())])
         item["03.offer_details"]["cost_parking_underground"] = get_digit(e[index_by_input(e, "Underground parking rent".lower())])
+        item["03.offer_details"]["min_space_to_let"] = get_digit(e[index_by_input(e, "Minimum office space to let".lower())])
+        item["03.offer_details"]["min_lease"] = get_digit(e[index_by_input(e, "Minimum lease term".lower())])
+        item["03.offer_details"]["add_on_factor"] = get_digit(e[index_by_input(e, "Add-on factor".lower())])
 
 
 
@@ -131,10 +134,10 @@ if __name__ == "__main__":
     data = open_data("raw_data_set1.txt")
     print(data[0])
 
-    check_count(data)
-    check_podnajem(data)
+    # check_count(data)
+    # check_podnajem(data)
 
-    # restructed_data = restruct_data(data)
-    # print(len(restructed_data))
-    #
-    # check_restructed_all(restructed_data)
+    restructed_data = restruct_data(data)
+    print(len(restructed_data))
+
+    check_restructed_all(restructed_data)
