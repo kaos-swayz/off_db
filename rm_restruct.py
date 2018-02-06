@@ -25,7 +25,12 @@ def restruct_data(data):
         item["02.location_details"]["address"] = get_address(e[4])
 
         item["03.offer_details"] = {}
-        item["03.offer_details"]["rent_office"] = get_digit(e[index_by_input(e, "czynsz wyjściowy za pow. biurową")])
+        item["03.offer_details"]["rent_office"] = get_digit(e[index_by_input(e, "Asking rent for office space".lower())])
+        item["03.offer_details"]["rent_retail"] = get_digit(e[index_by_input(e, "Asking rent for retail space".lower())])
+        item["03.offer_details"]["rent_warehouse"] = get_digit(e[index_by_input(e, "Asking rent for industrial space".lower())])
+        item["03.offer_details"]["service_charge"] = get_digit(e[index_by_input(e, "Service charge".lower())]).replace(" / month ","")
+        item["03.offer_details"]["cost_parking_surface"] = get_digit(e[index_by_input(e, "Surface parking rent".lower())])
+        item["03.offer_details"]["cost_parking_underground"] = get_digit(e[index_by_input(e, "Underground parking rent".lower())])
 
 
 
@@ -40,9 +45,9 @@ def restruct_data(data):
 
 
 def get_type(e):
-    if "podnajem" in e:
+    if "podnajem" in e.lower():
         return "sublease"
-    elif "Podnajem" in e:
+    elif "sublease" in e.lower():
         return "sublease"
     else:
         return "lease"
@@ -68,7 +73,7 @@ def get_digit(e):
     if match:
         return e[match.start():]
     else:
-        return "to be confirmed"
+        return ""
 
 
 
@@ -96,9 +101,9 @@ def check_count(data):
     len_inne = 0
     for e in data:
         # print(len(e))
-        if len(e) == 41:
+        if len(e) == 42:
             len_41 += 1
-        elif len(e) == 43:
+        elif len(e) == 44:
             len_43 += 1
         else:
             len_inne += 1
@@ -109,7 +114,10 @@ def check_count(data):
 def check_podnajem(data):
     podnajem_count = 0
     for e in data:
-        if "podnajem" in e[1]:
+        if "sublease" in e[1].lower():
+            podnajem_count += 1
+            print(e)
+        elif "podnajem" in e[1].lower():
             podnajem_count += 1
             print(e)
     print("podnajem_count: {}".format(podnajem_count))
@@ -120,13 +128,13 @@ def check_restructed_all(r_data):
 
 
 if __name__ == "__main__":
-    data = open_data("raw_data.txt")
+    data = open_data("raw_data_set1.txt")
     print(data[0])
 
-    # check_count(data)
-    # check_podnajem(data)
+    check_count(data)
+    check_podnajem(data)
 
-    restructed_data = restruct_data(data)
-    print(len(restructed_data))
-
-    check_restructed_all(restructed_data)
+    # restructed_data = restruct_data(data)
+    # print(len(restructed_data))
+    #
+    # check_restructed_all(restructed_data)
