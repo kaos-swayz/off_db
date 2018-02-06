@@ -78,7 +78,8 @@ def get_digit(e):
     else:
         return ""
 
-
+def get_index(e, index):
+    return e[index:]
 
 
 
