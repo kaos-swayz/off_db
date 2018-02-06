@@ -35,6 +35,8 @@ def restruct_data(data):
         item["03.offer_details"]["min_lease"] = get_digit(e[index_by_input(e, "Minimum lease term".lower())])
         item["03.offer_details"]["add_on_factor"] = get_digit(e[index_by_input(e, "Add-on factor".lower())])
 
+        item["04.building_details"] = {}
+        item["04.building_details"]["building_status"] = get_index(e[index_by_input(e, "Building status".lower())],16)
 
 
         item["09.metadata"] = {}
