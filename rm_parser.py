@@ -83,11 +83,11 @@ if __name__ == "__main__":
     output_raw_data = "raw_data_set1.txt"
 
     url_base = unpack_url_data(input_file_name)
-    # parse_by_pages(url_base, min_page=0, max_page=94, output_urls)
+    parse_by_pages(url_base, min_page=0, max_page=94, output_url_list=output_urls)
 
 
-    urls = unpack_url_data(output_urls)
-    parse_by_links(urls)
+    # urls = unpack_url_data(output_urls)
+    # parse_by_links(urls)
     # soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
     # fetch_all_raw_data(soup)
 
