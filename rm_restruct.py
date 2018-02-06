@@ -47,7 +47,23 @@ def restruct_data(data):
         item["04.building_details"]["no_underground_parking"] = get_digit(e[index_by_input(e, "Number of underground parking spaces".lower())])
         item["04.building_details"]["parking_ratio"] = get_digit(e[index_by_input(e, "Parking ratio".lower())]).replace("place ", "").replace(" of the leased space","")
 
-
+        item["05.fitout_standard"] = {}
+        item["05.fitout_standard"]["sprinklers"] = True
+        item["05.fitout_standard"]["access_control"] = True
+        item["05.fitout_standard"]["computer_cabling"] = True
+        item["05.fitout_standard"]["switchboard"] = True
+        item["05.fitout_standard"]["smoke_detectors"] = True
+        item["05.fitout_standard"]["suspended_ceiling"] = True
+        item["05.fitout_standard"]["openable_windows"] = True
+        item["05.fitout_standard"]["partition_walls"] = True
+        item["05.fitout_standard"]["backup_power_supply"] = True
+        item["05.fitout_standard"]["telephone_cabling"] = True
+        item["05.fitout_standard"]["power_cabling"] = True
+        item["05.fitout_standard"]["air_conditioning"] = True
+        item["05.fitout_standard"]["raised_floor"] = True
+        item["05.fitout_standard"]["carpeting"] = True
+        item["05.fitout_standard"]["fibre_optic_connections"] = True
+        item["05.fitout_standard"]["BMS"] = True
 
 
 
@@ -155,4 +171,4 @@ if __name__ == "__main__":
     restructed_data = restruct_data(data)
     print(len(restructed_data))
 
-    check_restructed_all(restructed_data)
+    # check_restructed_all(restructed_data)
