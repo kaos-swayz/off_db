@@ -1,5 +1,9 @@
 import json
 
+import re
+
+
+
 def open_data(file_name):
     with open(file_name, "r", encoding="UTF-8") as fp:
         data = json.loads(fp.read())
@@ -20,6 +24,9 @@ def restruct_data(data):
         item["02.location_details"]["district"] = get_district(e[2])
         item["02.location_details"]["address"] = get_address(e[4])
 
+        item["03.offer_details"] = {}
+        item["03.offer_details"]["rent_office"] = get_digit(e[index_rent_off(e)])
+
 
 
         item["09.metadata"] = {}
@@ -31,6 +38,7 @@ def restruct_data(data):
         output.append(item)
     return output
 
+
 def get_type(e):
     if "podnajem" in e:
         return "sublease"
@@ -38,6 +46,7 @@ def get_type(e):
         return "sublease"
     else:
         return "lease"
+
 
 def get_city(e):
     return e[:e.find(",")]
@@ -52,6 +61,28 @@ def get_district(e):
 def get_address(e):
     return e[e.find(",") + 2:]
 
+
+def get_digit(e):
+    # usefull to get rents and so on
+    match = re.search("\d", e)
+    if match:
+        return e[match.start():]
+    else:
+        return "to be confirmed"
+
+
+
+
+
+
+
+
+def index_rent_off(e):
+    # print(e)
+    for i in e:
+        if type(i) == str:
+            if "czynsz wyjściowy za pow. biurową" in i.lower():
+                return e.index(i)
 
 
 
