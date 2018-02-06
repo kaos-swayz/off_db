@@ -10,7 +10,7 @@ import bs4 as bs
 def fetch_links(soup, output_file_name="urls_output.txt"):
     for link in soup.find_all("a", {"class": "rmb-object-list-item"}):
         url = "".join(url_base[0] + link.get("href"))
-        print(url)
+        # print(url)
         with open(output_file_name, "a", encoding="UTF-8") as fp:
             fp.write(url + "\n")
 
@@ -18,6 +18,7 @@ def parse_by_pages(url_data_list, min_page=0, max_page=9999, output_url_list="ur
     for i in range(min_page, max_page):
         # code generates url by joining all parts of url_data list
         url = "".join(url_data_list) + str(i)
+        print("fetching urls from: {}".format(url))
         fetch_links(fetch_soup(url),output_url_list)
 
 
@@ -83,11 +84,11 @@ if __name__ == "__main__":
     output_raw_data = "raw_data_set1.txt"
 
     url_base = unpack_url_data(input_file_name)
-    parse_by_pages(url_base, min_page=0, max_page=94, output_url_list=output_urls)
+    # parse_by_pages(url_base, min_page=0, max_page=94, output_url_list=output_urls)
 
 
-    # urls = unpack_url_data(output_urls)
-    # parse_by_links(urls)
+    urls = unpack_url_data(output_urls)
+    parse_by_links(urls, output_file_name=output_raw_data)
     # soup = fetch_soup("http://www.remobile.pl/pl/biura/krakow/big,2217#3a4bc864")
     # fetch_all_raw_data(soup)
 
