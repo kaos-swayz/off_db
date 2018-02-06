@@ -71,11 +71,11 @@ def parse_by_links(url_data_list, output_file_name="raw_data.txt"):
         # n += 1
         # if n == :
         #     break
-    with open(output_file_name, "w") as f:
-        f.write(json.dumps(output))
+    save_json_file(file_name=output_file_name, content=output)
 
-
-
+def save_json_file(file_name, content):
+    with open(file_name, "w") as f:
+        f.write(json.dumps(content))
 
 
 if __name__ == "__main__":
