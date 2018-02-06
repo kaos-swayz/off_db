@@ -1,14 +1,8 @@
-import json
+from _main import open_json_file, save_json_file
 
 import re
 
 
-
-def open_data(file_name):
-    with open(file_name, "r", encoding="UTF-8") as fp:
-        data = json.loads(fp.read())
-
-    return data
 
 def restruct_data(data):
     output = []
@@ -65,7 +59,27 @@ def restruct_data(data):
         item["05.fitout_standard"]["fibre_optic_connections"] = True
         item["05.fitout_standard"]["BMS"] = True
 
+        translate_dict = {
+            "sprinklers": "sprinklers",
+            "access control": "access_control",
+            "computer cabling": "computer_cabling",
+            "switchboard": "switchboard",
+            "smoke/heat detectors": "smoke_detectors",
+            "suspended ceiling": "suspended_ceiling",
+            "openable windows": "openable_windows",
+            "partition walls": "partition_walls",
+            "backup power supply": "backup_power_supply",
+            "telephone cabling": "telephone_cabling",
+            "power cabling": "power_cabling",
+            "air-conditioning": "air_conditioning",
+            "raised floor": "raised_floor",
+            "carpeting": "carpeting",
+            "fibre optic connection": "fibre_optic_connections",
+            "BMS": "BMS"
+        }
 
+        for fitoout_e in e[-2]:
+            item["05.fitout_standard"][translate_dict[fitoout_e]] = False
 
         item["09.metadata"] = {}
         item["09.metadata"]["remobile_id"] = e[0]
@@ -162,7 +176,7 @@ def check_restructed_all(r_data):
 
 
 if __name__ == "__main__":
-    data = open_data("raw_data_set1.txt")
+    data = open_json_file("raw_data_set1.txt")
     print(data[0])
 
     # check_count(data)
@@ -171,4 +185,4 @@ if __name__ == "__main__":
     restructed_data = restruct_data(data)
     print(len(restructed_data))
 
-    # check_restructed_all(restructed_data)
+    check_restructed_all(restructed_data)

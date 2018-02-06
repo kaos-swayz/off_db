@@ -22,10 +22,13 @@ def fetch_soup(url):
 
 
 def save_json_file(file_name, content):
-    with open(file_name, "w") as f:
+    with open(file_name, "w", encoding="UTF-8") as f:
         f.write(json.dumps(content))
 
-
+def open_json_file(file_name):
+    with open(file_name, "r", encoding="UTF-8") as fp:
+        data = json.loads(fp.read())
+    return data
 
 
 def test_connection(soup):
