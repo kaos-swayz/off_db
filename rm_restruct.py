@@ -183,6 +183,8 @@ if __name__ == "__main__":
     # check_podnajem(data)
 
     restructed_data = restruct_data(data)
-    print(len(restructed_data))
 
+    print(len(restructed_data))
     check_restructed_all(restructed_data)
+
+    save_json_file("final_data_set1.json", restructed_data)
