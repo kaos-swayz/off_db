@@ -25,7 +25,7 @@ def restruct_data(data):
         item["02.location_details"]["address"] = get_address(e[4])
 
         item["03.offer_details"] = {}
-        item["03.offer_details"]["rent_office"] = get_digit(e[index_rent_off(e)])
+        item["03.offer_details"]["rent_office"] = get_digit(e[index_by_input(e, "czynsz wyjściowy za pow. biurową")])
 
 
 
@@ -77,12 +77,13 @@ def get_digit(e):
 
 
 
-def index_rent_off(e):
+def index_by_input(e, input):
     # print(e)
     for i in e:
         if type(i) == str:
-            if "czynsz wyjściowy za pow. biurową" in i.lower():
+            if input in i.lower():
                 return e.index(i)
+    return -1
 
 
 
