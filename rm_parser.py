@@ -1,4 +1,4 @@
-from _main import unpack_url_data, fetch_soup, test_connection
+from _main import unpack_url_data, fetch_soup, test_connection, save_json_file
 
 import requests
 import json
@@ -73,9 +73,7 @@ def parse_by_links(url_data_list, output_file_name="raw_data.txt"):
         #     break
     save_json_file(file_name=output_file_name, content=output)
 
-def save_json_file(file_name, content):
-    with open(file_name, "w") as f:
-        f.write(json.dumps(content))
+
 
 
 if __name__ == "__main__":

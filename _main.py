@@ -1,4 +1,5 @@
 import requests
+import json
 
 import bs4 as bs
 
@@ -17,6 +18,12 @@ def fetch_soup(url):
     html = response.content
     soup = bs.BeautifulSoup(html, "lxml")
     return soup
+
+
+
+def save_json_file(file_name, content):
+    with open(file_name, "w") as f:
+        f.write(json.dumps(content))
 
 
 
