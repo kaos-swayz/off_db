@@ -175,6 +175,30 @@ def check_restructed_all(r_data):
         print(e)
 
 
+def save_csv_file(file_name, content):
+    output = []
+    pattern = []
+    for dict in content[0]:
+        for key in content[0][dict]:
+            pattern.append(key)
+    output.append(";".join(pattern))
+
+    for list in content:
+        single_item = []
+        for dict in list:
+            # print(list[dict].values())
+            for key in list[dict]:
+                single_item.append(str(list[dict][key]))
+        single_item.append("\n")
+        output.append(";".join(single_item))
+        # print("".join(single_item))
+    with open(file_name, "w", encoding="UTF8") as f:
+        f.write("".join(output))
+    print("saved to file: {}".format(file_name))
+
+
+
+
 if __name__ == "__main__":
     data = open_json_file("raw_data_set1.txt")
     print(data[0])
@@ -187,4 +211,5 @@ if __name__ == "__main__":
     print(len(restructed_data))
     check_restructed_all(restructed_data)
 
-    save_json_file("final_data_set1.json", restructed_data)
+    # save_json_file("final_data_set1b.json", restructed_data)
+    save_csv_file("final_data_set1b.csv",restructed_data)
