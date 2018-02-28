@@ -1,0 +1,275 @@
+[
+  {
+    "1 name": "17 Stycznia 56", 
+    "2 location": {
+      "address": "ul. Stycznia 17 56", 
+      "city": "Warszawa", 
+      "district": "W\u0142ochy"
+    }, 
+    "3 building info": {
+      "add-on factor": "7.00 %", 
+      "completion date": "", 
+      "description": "", 
+      "floor plate": "do uzgodnienia", 
+      "min lease term": "12 miesi\u0119cy", 
+      "no of floors onground": "7 (\u0142\u0105cznie z parterem)", 
+      "no of floors underground": "2", 
+      "no of parking places onground": "do uzgodnienia", 
+      "no of parking places underground": "50", 
+      "parking ratio": "do uzgodnienia", 
+      "status": "istniej\u0105cy", 
+      "total space": "3 335 m2"
+    }, 
+    "4 terms": {
+      "parking onground": [
+        125.0, 
+        360.0
+      ], 
+      "parking onground currency": "z\u0142 / miejsce", 
+      "parking underground": [
+        290.0
+      ], 
+      "parking underground currency": "z\u0142 / miejsce", 
+      "rent": [
+        47.0
+      ], 
+      "rent currency": "z\u0142 / m2", 
+      "retail rent": [
+        47.0
+      ], 
+      "retail rent currency": "z\u0142 / m2", 
+      "service charge": [
+        15.0
+      ], 
+      "service charge currency": "z\u0142 / m2"
+    }, 
+    "5 building standard": {
+      "BMS": false, 
+      "centrala telefoniczna": true, 
+      "czujniki dymu i ciep\u0142a": true, 
+      "klimatyzacja": false, 
+      "kontrola dost\u0119pu": false, 
+      "okablowanie elektryczne": true, 
+      "okablowanie komputerowe": true, 
+      "okablowanie telefoniczne": true, 
+      "otwierane okna": true, 
+      "podnoszone pod\u0142ogi": false, 
+      "podwieszane sufity": true, 
+      "podw\u00f3jne zasilanie": false, 
+      "tryskacze": false, 
+      "wyk\u0142adziny": true, 
+      "\u0142\u0105cze \u015bwiat\u0142owodowe": false, 
+      "\u015bcianki dzia\u0142owe": true
+    }, 
+    "6 rentable area": {
+      "b no 1": {
+        "b name": "BUDYNEK 1", 
+        "b rentable area": {
+          "floor 0": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 0, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 1": {
+            "av space descr": "ca\u0142e pi\u0119tro B", 
+            "nla": 600, 
+            "since when": "od zaraz", 
+            "total av space": 600
+          }, 
+          "floor 2-6": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 600, 
+            "since when": "n/a", 
+            "total av space": 0
+          }
+        }
+      }
+    }
+  }, 
+  {
+    "1 name": "Adgar Park West", 
+    "2 location": {
+      "address": "Aleje Jerozolimskie 181 a", 
+      "city": "Warszawa", 
+      "district": "Ochota"
+    }, 
+    "3 building info": {
+      "add-on factor": "5.00 %", 
+      "completion date": "1996", 
+      "description": "", 
+      "floor plate": "2 285 m2", 
+      "min lease term": "60 miesi\u0119cy", 
+      "no of floors onground": "7 (\u0142\u0105cznie z parterem)", 
+      "no of floors underground": "1", 
+      "no of parking places onground": "663", 
+      "no of parking places underground": "449", 
+      "parking ratio": "1 miejsce na 30 m2 wynaj\u0119tej powierzchni", 
+      "status": "istniej\u0105cy", 
+      "total space": "43 000 m2"
+    }, 
+    "4 terms": {
+      "parking onground": [
+        50.0
+      ], 
+      "parking onground currency": "&#8364; / miejsce", 
+      "parking underground": [
+        75.0
+      ], 
+      "parking underground currency": "&#8364; / miejsce", 
+      "rent": [
+        13.5, 
+        15.0
+      ], 
+      "rent currency": "&#8364; / m2", 
+      "retail rent": [], 
+      "retail rent currency": "do uzgodnienia", 
+      "service charge": [
+        16.0
+      ], 
+      "service charge currency": "z\u0142 / m2"
+    }, 
+    "5 building standard": {
+      "BMS": false, 
+      "centrala telefoniczna": true, 
+      "czujniki dymu i ciep\u0142a": true, 
+      "klimatyzacja": true, 
+      "kontrola dost\u0119pu": true, 
+      "okablowanie elektryczne": true, 
+      "okablowanie komputerowe": true, 
+      "okablowanie telefoniczne": true, 
+      "otwierane okna": true, 
+      "podnoszone pod\u0142ogi": false, 
+      "podwieszane sufity": true, 
+      "podw\u00f3jne zasilanie": true, 
+      "tryskacze": false, 
+      "wyk\u0142adziny": true, 
+      "\u0142\u0105cze \u015bwiat\u0142owodowe": true, 
+      "\u015bcianki dzia\u0142owe": true
+    }, 
+    "6 rentable area": {
+      "b no 1": {
+        "b name": "BUDYNEK A", 
+        "b rentable area": {
+          "floor 0": {
+            "av space descr": "6 modu\u0142\u00f3w", 
+            "nla": 2285, 
+            "since when": "od zaraz", 
+            "total av space": 808
+          }, 
+          "floor 1": {
+            "av space descr": "modu\u0142 B", 
+            "nla": 2285, 
+            "since when": "od zaraz", 
+            "total av space": 551
+          }, 
+          "floor 2": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 2285, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 3": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 2285, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 4": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 2285, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 5": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 2285, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 6": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 2285, 
+            "since when": "n/a", 
+            "total av space": 0
+          }
+        }
+      }, 
+      "b no 2": {
+        "b name": "BUDYNEK B", 
+        "b rentable area": {
+          "floor 0": {
+            "av space descr": "3 modu\u0142y", 
+            "nla": 0, 
+            "since when": "od zaraz", 
+            "total av space": 371
+          }, 
+          "floor 1": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 0, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 2": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 0, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 3": {
+            "av space descr": "modu\u0142 B", 
+            "nla": 0, 
+            "since when": "od zaraz", 
+            "total av space": 305
+          }, 
+          "floor 4": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 0, 
+            "since when": "n/a", 
+            "total av space": 0
+          }, 
+          "floor 5": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 0, 
+            "since when": "n/a", 
+            "total av space": 0
+          }
+        }
+      }, 
+      "b no 3": {
+        "b name": "BUDYNEK C", 
+        "b rentable area": {
+          "floor 0": {
+            "av space descr": "modu\u0142 H", 
+            "nla": 0, 
+            "since when": "od zaraz", 
+            "total av space": 244
+          }, 
+          "floor 1": {
+            "av space descr": "wynaj\u0119te", 
+            "nla": 0, 
+            "since when": "n/a", 
+            "total av space": 0
+          }
+        }
+      }, 
+      "b no 4": {
+        "b name": "BUDYNEK 4", 
+        "b rentable area": {
+          "floor 0": {
+            "av space descr": "ca\u0142e pi\u0119tro B", 
+            "nla": 1624, 
+            "since when": "od zaraz", 
+            "total av space": 1624
+          }, 
+          "floor 1-3": {
+            "av space descr": "ca\u0142e pi\u0119tro B", 
+            "nla": 2141, 
+            "since when": "od zaraz", 
+            "total av space": 2141
+          }
+        }
+      }
+    }
+  }
+]

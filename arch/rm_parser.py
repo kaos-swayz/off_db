@@ -16,8 +16,8 @@ def fetch_links(soup, output_file_name="urls_output.txt"):
 
 def parse_by_pages(url_data_list, min_page=0, max_page=9999, output_url_list="urls_output"):
     for i in range(min_page, max_page):
-        # code generates url by joining all parts of url_data list
-        url = "".join(url_data_list) + str(i)
+        # generate url by joining all parts of url_data list
+        url = "".join(url_data_list).format(str(i))
         print("fetching urls from: {}".format(url))
         fetch_links(fetch_soup(url),output_url_list)
 

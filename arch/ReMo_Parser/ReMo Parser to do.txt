@@ -1,0 +1,5 @@
+do zrobienia:
+- zamiana budynek a - na nazwy sta³e, bo inaczej cie¿ko bêdzie te wartoœci przetrzymywaæ
+- lepiej zrobiæ na sztywno bud 1, 2, 3.. itd. - i do tego dwa pola: "building name" + "building spaces"
+
+w reconstructing table wjebywaæ te piêtra, na których nic nie ma
