@@ -76,47 +76,49 @@ class ParserRawData:
     def fetch_raw_data_bj(self, soup, url):
         print("fetching data from: " + url)
 
-        output = []
+        if self.try_if_not_404(soup, url) == True:
 
-        # id
-        output.append(url[28:url.find(".html")])
-        # name
-        self.fetch_element(soup, output_list=output, html_target_element="h1")
-        # source
-        output.append(url[url.find("www") + 4:url.find(".", url.find("www") + 5)])
-        # url
-        output.append(url)
-        # img url
-        temp_list = []
-        try:
-            element = soup.find("div", {"class": "building-carousel"})
-            self.fetch_property(element, output_list=temp_list, html_target_element="img", property_name="src")
-            output.append(temp_list[0])
-        except AttributeError as err:
-            print("An error: {} have occured on url: {}".format(err, url))
+            output = []
+
+            # id
+            output.append(url[28:url.find(".html")])
+            # name
+            self.fetch_element(soup, output_list=output, html_target_element="h1")
+            # source
+            output.append(url[url.find("www") + 4:url.find(".", url.find("www") + 5)])
+            # url
+            output.append(url)
+            # img url
+            temp_list = []
+            try:
+                element = soup.find("div", {"class": "building-carousel"})
+                self.fetch_property(element, output_list=temp_list, html_target_element="img", property_name="src")
+                output.append(temp_list[0])
+            except AttributeError as err:
+                print("An error: {} have occured on url: {}".format(err, url))
+                output.append("")
+            # address
+            self.fetch_element(soup, output_list=output, html_target_element="p", css_css_id_value="location")
+            # all data
+            # print("Building completely leased" in [e.text for e in soup.find_all("p")])
+            bj_offer_sec = ["Available space", "Availability", "Asking rent", "Rent for parking", "Minimum office unit",
+                            "Minimum lease term", "Service charge"]
+            for e in [e.text for e in soup.find_all("p")]:
+                if e == "Building completely leased.":
+                    for e in bj_offer_sec:
+                        output.append(e + "Leased")
+            element = soup.find("section", {"class": "building-details"})
+            self.fetch_element(element, output_list=output, html_target_element="li")
+            # #disabled fit-out elements
+            # fitout_disabled = []
+            # fetch_element(soup, output_list=fitout_disabled, html_target_element="span", css_css_id_value="rmb-details-list-disabled")
+            # output.append(fitout_disabled)
+            # empty string for debuging reasons
             output.append("")
-        # address
-        self.fetch_element(soup, output_list=output, html_target_element="p", css_css_id_value="location")
-        # all data
-        # print("Building completely leased" in [e.text for e in soup.find_all("p")])
-        bj_offer_sec = ["Available space", "Availability", "Asking rent", "Rent for parking", "Minimum office unit",
-                        "Minimum lease term", "Service charge"]
-        for e in [e.text for e in soup.find_all("p")]:
-            if e == "Building completely leased.":
-                for e in bj_offer_sec:
-                    output.append(e + "Leased")
-        element = soup.find("section", {"class": "building-details"})
-        self.fetch_element(element, output_list=output, html_target_element="li")
-        # #disabled fit-out elements
-        # fitout_disabled = []
-        # fetch_element(soup, output_list=fitout_disabled, html_target_element="span", css_css_id_value="rmb-details-list-disabled")
-        # output.append(fitout_disabled)
-        # empty string for debuging reasons
-        output.append("")
 
 
-        # print(output)
-        return output
+            # print(output)
+            return output
 
     """ final parser function """
 
@@ -140,7 +142,14 @@ class ParserRawData:
             url = url.replace("https://www.officefinder.pl/office-warsaw-lewartowskiego-6.html", "https://www.officefinder.pl/office-warsaw-edelmana-6-dawniej-lewartowskiego-6.html")
         return url
 
+    def try_if_not_404(self, soup, url):
+        if "error 404" in soup.title.text.lower():
+            return False
+        else:
+            return True
+
 
 if __name__ == "__main__":
     p = ParserRawData(urls_input_file="urls/urls_output_bj.txt")
     p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
+    # p.fetch_raw_data_bj(fetch_soup("https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html"), "https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html")
