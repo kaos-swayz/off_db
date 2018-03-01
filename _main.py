@@ -5,12 +5,12 @@ import bs4 as bs
 
 
 
-def unpack_url_data(file_name):
+def unpack_data_file(file_name):
     """ pattern = url_data[0] - base url, url_data[1] - ext url """
     with open(file_name, "r", encoding="UTF8") as fp:
-        url_data = fp.read().split()
+        data = fp.read().split()
     # print(url_data)
-    return url_data
+    return data
 
 def fetch_soup(url):
     session = requests.Session()
@@ -38,10 +38,4 @@ def test_connection(soup):
     print(soup.title.string)
 
 if __name__ == "__main__":
-    input_file_name = "url_data.txt"
-    output_urls = "urls_output.txt"
-
-    url = "".join(unpack_url_data(input_file_name))
-    soup = fetch_soup(url)
-
-    test_connection(soup)
+    pass
