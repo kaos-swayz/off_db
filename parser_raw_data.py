@@ -120,7 +120,7 @@ class ParserRawData:
 
     """ final parser function """
 
-    def parse_by_links(self, urls, output_file_name, max_iterations=999):
+    def parse_by_links(self, urls, output_file_name, max_iterations=9999):
         # parses through all elements
         output = []
         n = 0
