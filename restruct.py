@@ -659,7 +659,9 @@ class Restructor:
         return output
 
 
-
+    def save_to_json(self, data):
+        file_name = "datasets/final_data_{}.json".format(self.name_of_set)
+        save_json_file(file_name=file_name, content=data)
 
 
 
@@ -667,14 +669,16 @@ class Restructor:
 
 
 if __name__ == "__main__":
-    r = Restructor(raw_data_file="datasets/raw_data_zhand.json")
-    print(r.raw_data[0])
+    r = Restructor(raw_data_file="datasets/raw_data_bj.json")
+    print(len(r.raw_data))
     print(r.name_of_set)
 
-    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
-    n = 0
-    for e in data:
-        print(e)
-        n += 1
-        if n == 999:
-            break
+    # data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
+    #
+    # r.save_to_json(data)
+    # n = 0
+    # for e in data:
+    #     print(e)
+    #     n += 1
+    #     if n == 9999:
+    #         break
