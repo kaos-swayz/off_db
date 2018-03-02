@@ -67,3 +67,7 @@ if __name__ == "__main__":
     # data = open_json_file("datasets/final_data_rm.json")
     # pattern = m.csv_pattern([data[0]])
     # m.save_to_csv(file_name="_pattern.csv", content=pattern)
+
+
+
+    pass
