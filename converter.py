@@ -80,7 +80,14 @@ class Converter:
     """ component converter functions """
 
     def data_to_json(self, function, input_file_name, output_file_name):
-        data = self.open_csv()
+        data = self.open_csv(file_name=input_file_name)
+
+        # print(data[:1130])
+        json_data = function(data)
+        test = {"key":"value"}
+
+        save_json_file(file_name=output_file_name, content=test)
+
 
     def convert_data_to_json_format(self, data):
         pass
@@ -93,5 +100,4 @@ class Converter:
 if __name__ == "__main__":
     c = Converter()
 
-    data = c.open_csv("datasets/combined_data_match_fix_to_merge.csv")
-    print(data[:1130])
+    data = c.data_to_json(function=None, input_file_name="datasets/combined_data_match_fix_to_merge.csv", output_file_name="datasets/test.json")
