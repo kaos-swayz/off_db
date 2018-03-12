@@ -150,6 +150,6 @@ class ParserRawData:
 
 
 if __name__ == "__main__":
-    p = ParserRawData(urls_input_file="urls/urls_output_bj.txt")
+    p = ParserRawData(urls_input_file="urls/urls_output_rm.txt")
     p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
     # p.fetch_raw_data_bj(fetch_soup("https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html"), "https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html")
