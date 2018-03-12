@@ -3,7 +3,7 @@ from _main import open_json_file, save_json_file
 from os import listdir
 from difflib import SequenceMatcher
 
-class Converter_csv:
+class Converter:
     def __init__(self):
         pass
 
@@ -68,7 +68,7 @@ class Converter_csv:
 
 
 if __name__ == "__main__":
-    c = Converter_csv()
+    c = Converter()
 
     c.save_combined_csv()
     # c.save_pattern_csv()
