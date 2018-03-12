@@ -8,33 +8,33 @@ class Converter_csv:
         pass
 
 
-    """
-        WARNING - OUT OF DATE!
-    """
+    """ main converter functions """
 
-    """ csv components """
+    def save_combined_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="combined_data_match.csv.csv"):
+        self.data_to_csv(function=self.convert_data_to_csv_format(),input_file_name=input_file_name, output_file_name=output_file_name)
 
-    def save_combined_csv_data(self):
-        output_file_name = "datasets/combined_data.csv"
+    def save_pattern_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="datasets/_pattern.csv"):
+        self.data_to_csv(function=self.convert_data_to_csv_pattern(),input_file_name=input_file_name, output_file_name=output_file_name)
 
-        with open(output_file_name, "w", encoding="UTF-8") as fp:
-            fp.write("")
 
-        for file in [f for f in listdir("datasets")]:
-            if "final" in file:
-                file_data = open_json_file("datasets/{}".format(file))
-                # print(len(file_data))
-                csv_data = self.convert_final_data_file_to_csv(file_data)
-                self.save_to_csv(file_name=output_file_name, content=csv_data)
 
-    def convert_final_data_file_to_csv(self, data):
+    """ component converter functions """
+
+    def data_to_csv(self, function, input_file_name, output_file_name):
+        data = open_json_file(input_file_name)
+
+        csv_data = function
+
+        self.save_to_csv(file_name=output_file_name, content=csv_data)
+
+    def convert_data_to_csv_format(self, data):
         output_list = []
-        for building_record in data:
+        for item in data:
             building_list = []
-            for nav_dict in building_record:
-                for key in building_record[nav_dict].keys():
-                    value = building_record[nav_dict][key]
-                    building_list.append(str(value))
+            for nav_dict in data[item]:
+                for key in data[item][nav_dict].keys():
+                    value = data[item][nav_dict][key]
+                    building_list.append((str(value)))
             building_list.append("\n")
             output_list.append(building_list)
         csv_list = []
@@ -43,24 +43,32 @@ class Converter_csv:
             csv_list.append(csv_el)
         return "".join(csv_list)
 
-    def csv_pattern(self, data):
+    def convert_data_to_csv_pattern(self, data):
         pattern_list = []
-        for building_record in data:
 
-            for nav_dict in building_record:
-                for key in building_record[nav_dict].keys():
-                    pattern_list.append(key)
+        items = [i for i in data.keys()]
+        item = items[0]
+        for nav_dict in data[item]:
+            for key in data[item][nav_dict].keys():
+                print(key)
+                pattern_list.append(key)
+
         return "|".join(pattern_list)
+
+
+
+    """ saving csv """
 
     def save_to_csv(self, file_name, content):
         if type(content) == str:
-            with open(file_name, "a", encoding="UTF-8") as fp:
+            with open(file_name, "w", encoding="UTF-8") as fp:
                 fp.write(content)
-        print("appended to a file: {}".format(file_name))
-
-
+        print("saved to a file: {}".format(file_name))
 
 
 
 if __name__ == "__main__":
-    pass
+    c = Converter_csv()
+
+    c.save_combined_csv()
+    # c.save_pattern_csv()
