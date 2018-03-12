@@ -53,6 +53,7 @@ class Restructor:
     """ 01.main_data """
     # item["01.main_data"]["name"]
     def s_01_name(self, e, set):
+        # print(e)
         if set == "rm"  :   return e[1]
         elif set == "bj":   return e[1]
         elif set == "oc":   pass
@@ -118,8 +119,14 @@ class Restructor:
     
     def get_address_bj(self, e):
         # return e[e.rfind(",") + 2:]
+        # print(e)
         match = re.search("\d", e)
-        raw_address = e[match.start():]
+        # print(bool(match))
+        if bool(match) == True:
+            raw_address = e[match.start():]
+        else:
+            raw_address = e
+        address = ""
 
         if "," in raw_address:
             if "Street" in raw_address:
@@ -132,6 +139,11 @@ class Restructor:
                 name = raw_address[raw_address.find(",") + 2:]
                 name = name.replace("Avenue", "")
                 address = "Aleja " + name + " " + number
+            elif "Square" in raw_address:
+                number = raw_address[:raw_address.find(",")]
+                name = raw_address[raw_address.find(",") + 2:]
+                name = name.replace("Square", "")
+                address = "Plac " + name + " " + number
         else:
             address = raw_address
         return address
@@ -566,96 +578,97 @@ class Restructor:
     def restruct_data(self, raw_data, set):
         output = []
         for e in raw_data:
-            item = {}
+            if e is not None:
+                item = {}
 
-            item["01.main_data"] = {}
-            item["01.main_data"]["name"] = self.s_01_name(e, set)
-            item["01.main_data"]["type"] = self.s_01_type(e, set)
-            item["01.main_data"]["source"] = self.s_01_source(e, set)
+                item["01.main_data"] = {}
+                item["01.main_data"]["name"] = self.s_01_name(e, set)
+                item["01.main_data"]["type"] = self.s_01_type(e, set)
+                item["01.main_data"]["source"] = self.s_01_source(e, set)
 
-            item["02.location_details"] = {}
-            item["02.location_details"]["city"] = self.s_02_city(e, set)
-            item["02.location_details"]["district"] = self.s_02_district(e, set)
-            item["02.location_details"]["address"] = self.s_02_address(e, set)
+                item["02.location_details"] = {}
+                item["02.location_details"]["city"] = self.s_02_city(e, set)
+                item["02.location_details"]["district"] = self.s_02_district(e, set)
+                item["02.location_details"]["address"] = self.s_02_address(e, set)
 
-            item["03.offer_details"] = {}
-            item["03.offer_details"]["av_office"] = self.s_03_av_office(e, set)
-            item["03.offer_details"]["av_office_vol"] = self.s_03_av_office_vol(e, set)
-            item["03.offer_details"]["rent_office"] = self.s_03_rent_office(e, set)
-            item["03.offer_details"]["rent_retail"] = self.s_03_rent_retail(e, set)
-            item["03.offer_details"]["rent_warehouse"] = self.s_03_rent_warehouse(e, set)
-            item["03.offer_details"]["service_charge"] = self.s_03_service_charge(e, set)
-            item["03.offer_details"]["cost_parking_surface"] = self.s_03_cost_parking_surface(e, set)
-            item["03.offer_details"]["cost_parking_underground"] = self.s_03_cost_parking_underground(e, set)
-            item["03.offer_details"]["min_space_to_let"] = self.s_03_min_space_to_let(e, set)
-            item["03.offer_details"]["min_lease"] = self.s_03_min_lease(e, set)
-            item["03.offer_details"]["add_on_factor"] = self.s_03_add_on_factor(e, set)
+                item["03.offer_details"] = {}
+                item["03.offer_details"]["av_office"] = self.s_03_av_office(e, set)
+                item["03.offer_details"]["av_office_vol"] = self.s_03_av_office_vol(e, set)
+                item["03.offer_details"]["rent_office"] = self.s_03_rent_office(e, set)
+                item["03.offer_details"]["rent_retail"] = self.s_03_rent_retail(e, set)
+                item["03.offer_details"]["rent_warehouse"] = self.s_03_rent_warehouse(e, set)
+                item["03.offer_details"]["service_charge"] = self.s_03_service_charge(e, set)
+                item["03.offer_details"]["cost_parking_surface"] = self.s_03_cost_parking_surface(e, set)
+                item["03.offer_details"]["cost_parking_underground"] = self.s_03_cost_parking_underground(e, set)
+                item["03.offer_details"]["min_space_to_let"] = self.s_03_min_space_to_let(e, set)
+                item["03.offer_details"]["min_lease"] = self.s_03_min_lease(e, set)
+                item["03.offer_details"]["add_on_factor"] = self.s_03_add_on_factor(e, set)
 
-            item["04.building_details"] = {}
-            item["04.building_details"]["building_status"] = self.s_04_building_status(e, set)
-            item["04.building_details"]["building_class"] = self.s_04_building_class(e, set)
-            item["04.building_details"]["total_net_space"] = self.s_04_total_net_space(e, set)
-            item["04.building_details"]["total_gross_space"] = self.s_04_total_gross_space(e, set)
-            item["04.building_details"]["completion_date"] = self.s_04_completion_date(e, set)
-            item["04.building_details"]["ground_floors"] = self.s_04_ground_floors(e, set)
-            item["04.building_details"]["floor_plate"] = self.s_04_floor_plate(e, set)
-            item["04.building_details"]["no_surface_parking"] = self.s_04_no_surface_parking(e, set)
-            item["04.building_details"]["no_underground_parking"] = self.s_04_no_underground_parking(e, set)
-            item["04.building_details"]["parking_ratio"] = self.s_04_parking_ratio(e, set)
-            item["04.building_details"]["building_certification"] = self.s_04_building_certification(e, set)
+                item["04.building_details"] = {}
+                item["04.building_details"]["building_status"] = self.s_04_building_status(e, set)
+                item["04.building_details"]["building_class"] = self.s_04_building_class(e, set)
+                item["04.building_details"]["total_net_space"] = self.s_04_total_net_space(e, set)
+                item["04.building_details"]["total_gross_space"] = self.s_04_total_gross_space(e, set)
+                item["04.building_details"]["completion_date"] = self.s_04_completion_date(e, set)
+                item["04.building_details"]["ground_floors"] = self.s_04_ground_floors(e, set)
+                item["04.building_details"]["floor_plate"] = self.s_04_floor_plate(e, set)
+                item["04.building_details"]["no_surface_parking"] = self.s_04_no_surface_parking(e, set)
+                item["04.building_details"]["no_underground_parking"] = self.s_04_no_underground_parking(e, set)
+                item["04.building_details"]["parking_ratio"] = self.s_04_parking_ratio(e, set)
+                item["04.building_details"]["building_certification"] = self.s_04_building_certification(e, set)
 
-            item["05.fitout_standard"] = {}
-            item["05.fitout_standard"]["sprinklers"] = self.s_05_sprinklers(e, set)
-            item["05.fitout_standard"]["access_control"] = self.s_05_access_control(e, set)
-            item["05.fitout_standard"]["computer_cabling"] = self.s_05_computer_cabling(e, set)
-            item["05.fitout_standard"]["switchboard"] = self.s_05_switchboard(e, set)
-            item["05.fitout_standard"]["smoke_detectors"] = self.s_05_smoke_detectors(e, set)
-            item["05.fitout_standard"]["suspended_ceiling"] = self.s_05_suspended_ceiling(e, set)
-            item["05.fitout_standard"]["openable_windows"] = self.s_05_openable_windows(e, set)
-            item["05.fitout_standard"]["partition_walls"] = self.s_05_partition_walls(e, set)
-            item["05.fitout_standard"]["backup_power_supply"] = self.s_05_backup_power_supply(e, set)
-            item["05.fitout_standard"]["telephone_cabling"] = self.s_05_telephone_cabling(e, set)
-            item["05.fitout_standard"]["power_cabling"] = self.s_05_power_cabling(e, set)
-            item["05.fitout_standard"]["air_conditioning"] = self.s_05_air_conditioning(e, set)
-            item["05.fitout_standard"]["raised_floor"] = self.s_05_raised_floor(e, set)
-            item["05.fitout_standard"]["carpeting"] = self.s_05_carpeting(e, set)
-            item["05.fitout_standard"]["fibre_optic_connections"] = self.s_05_fibre_optic_connections(e, set)
-            item["05.fitout_standard"]["BMS"] = self.s_05_BMS(e, set)
+                item["05.fitout_standard"] = {}
+                item["05.fitout_standard"]["sprinklers"] = self.s_05_sprinklers(e, set)
+                item["05.fitout_standard"]["access_control"] = self.s_05_access_control(e, set)
+                item["05.fitout_standard"]["computer_cabling"] = self.s_05_computer_cabling(e, set)
+                item["05.fitout_standard"]["switchboard"] = self.s_05_switchboard(e, set)
+                item["05.fitout_standard"]["smoke_detectors"] = self.s_05_smoke_detectors(e, set)
+                item["05.fitout_standard"]["suspended_ceiling"] = self.s_05_suspended_ceiling(e, set)
+                item["05.fitout_standard"]["openable_windows"] = self.s_05_openable_windows(e, set)
+                item["05.fitout_standard"]["partition_walls"] = self.s_05_partition_walls(e, set)
+                item["05.fitout_standard"]["backup_power_supply"] = self.s_05_backup_power_supply(e, set)
+                item["05.fitout_standard"]["telephone_cabling"] = self.s_05_telephone_cabling(e, set)
+                item["05.fitout_standard"]["power_cabling"] = self.s_05_power_cabling(e, set)
+                item["05.fitout_standard"]["air_conditioning"] = self.s_05_air_conditioning(e, set)
+                item["05.fitout_standard"]["raised_floor"] = self.s_05_raised_floor(e, set)
+                item["05.fitout_standard"]["carpeting"] = self.s_05_carpeting(e, set)
+                item["05.fitout_standard"]["fibre_optic_connections"] = self.s_05_fibre_optic_connections(e, set)
+                item["05.fitout_standard"]["BMS"] = self.s_05_BMS(e, set)
 
-            translate_dict = {
-                "sprinklers": "sprinklers",
-                "access control": "access_control",
-                "computer cabling": "computer_cabling",
-                "switchboard": "switchboard",
-                "smoke/heat detectors": "smoke_detectors",
-                "suspended ceiling": "suspended_ceiling",
-                "openable windows": "openable_windows",
-                "partition walls": "partition_walls",
-                "backup power supply": "backup_power_supply",
-                "telephone cabling": "telephone_cabling",
-                "power cabling": "power_cabling",
-                "air-conditioning": "air_conditioning",
-                "raised floor": "raised_floor",
-                "carpeting": "carpeting",
-                "fibre optic connection": "fibre_optic_connections",
-                "BMS": "BMS"
-            }
+                translate_dict = {
+                    "sprinklers": "sprinklers",
+                    "access control": "access_control",
+                    "computer cabling": "computer_cabling",
+                    "switchboard": "switchboard",
+                    "smoke/heat detectors": "smoke_detectors",
+                    "suspended ceiling": "suspended_ceiling",
+                    "openable windows": "openable_windows",
+                    "partition walls": "partition_walls",
+                    "backup power supply": "backup_power_supply",
+                    "telephone cabling": "telephone_cabling",
+                    "power cabling": "power_cabling",
+                    "air-conditioning": "air_conditioning",
+                    "raised floor": "raised_floor",
+                    "carpeting": "carpeting",
+                    "fibre optic connection": "fibre_optic_connections",
+                    "BMS": "BMS"
+                }
 
-            if set == "rm":
-                for fitoout_e in e[-2]:
-                    item["05.fitout_standard"][translate_dict[fitoout_e]] = False
+                if set == "rm":
+                    for fitoout_e in e[-2]:
+                        item["05.fitout_standard"][translate_dict[fitoout_e]] = False
 
-            item["09.metadata"] = {}
-            item["09.metadata"]["rm_id"] = self.s_09_rm_id(e, set)
-            item["09.metadata"]["rm_url"] = self.s_09_rm_url(e, set)
-            item["09.metadata"]["rm_pic_url"] = self.s_09_rm_pic_url(e, set)
-            item["09.metadata"]["bj_id"] = self.s_09_bj_id(e, set)
-            item["09.metadata"]["bj_url"] = self.s_09_bj_url(e, set)
-            item["09.metadata"]["bj_pic_url"] = self.s_09_bj_pic_url(e, set)
-            item["09.metadata"]["add_info"] = self.s_09_add_info(e, set)
+                item["09.metadata"] = {}
+                item["09.metadata"]["rm_id"] = self.s_09_rm_id(e, set)
+                item["09.metadata"]["rm_url"] = self.s_09_rm_url(e, set)
+                item["09.metadata"]["rm_pic_url"] = self.s_09_rm_pic_url(e, set)
+                item["09.metadata"]["bj_id"] = self.s_09_bj_id(e, set)
+                item["09.metadata"]["bj_url"] = self.s_09_bj_url(e, set)
+                item["09.metadata"]["bj_pic_url"] = self.s_09_bj_pic_url(e, set)
+                item["09.metadata"]["add_info"] = self.s_09_add_info(e, set)
 
 
-            output.append(item)
+                output.append(item)
         return output
 
 
@@ -669,16 +682,10 @@ class Restructor:
 
 
 if __name__ == "__main__":
-    r = Restructor(raw_data_file="datasets/raw_data_bj.json")
+    r = Restructor(raw_data_file="datasets/raw_data_rm.json")
     print(len(r.raw_data))
     print(r.name_of_set)
 
-    # data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
-    #
-    # r.save_to_json(data)
-    # n = 0
-    # for e in data:
-    #     print(e)
-    #     n += 1
-    #     if n == 9999:
-    #         break
+    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
+
+    r.save_to_json(data)
