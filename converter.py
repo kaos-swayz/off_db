@@ -8,22 +8,22 @@ class Converter:
         pass
 
 
+    """ JSON to CSV """
+
     """ main converter functions """
 
-    def save_combined_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="combined_data_match.csv.csv"):
+    def save_combined_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="datasets/combined_data_match.csv"):
         self.data_to_csv(function=self.convert_data_to_csv_format(),input_file_name=input_file_name, output_file_name=output_file_name)
 
     def save_pattern_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="datasets/_pattern.csv"):
         self.data_to_csv(function=self.convert_data_to_csv_pattern(),input_file_name=input_file_name, output_file_name=output_file_name)
-
-
 
     """ component converter functions """
 
     def data_to_csv(self, function, input_file_name, output_file_name):
         data = open_json_file(input_file_name)
 
-        csv_data = function
+        csv_data = function(data)
 
         self.save_to_csv(file_name=output_file_name, content=csv_data)
 
@@ -55,8 +55,6 @@ class Converter:
 
         return "|".join(pattern_list)
 
-
-
     """ saving csv """
 
     def save_to_csv(self, file_name, content):
@@ -65,10 +63,35 @@ class Converter:
                 fp.write(content)
         print("saved to a file: {}".format(file_name))
 
+    def open_csv(self, file_name):
+        with open(file_name, "r", encoding="UTF-8") as fp:
+            data = fp.read()
+        print("read from a file: {}".format(file_name))
+        return data
+
+
+    """ JSON to CSV """
+
+    """ main converter functions """
+
+    def save_combined_json(self, input_file_name="datasets/combined_data_match_fix_to_merge.csv", output_file_name="combined_data_to_merge.json"):
+        pass
+
+    """ component converter functions """
+
+    def data_to_json(self, function, input_file_name, output_file_name):
+        data = self.open_csv()
+
+    def convert_data_to_json_format(self, data):
+        pass
+
+
+
+
 
 
 if __name__ == "__main__":
     c = Converter()
 
-    c.save_combined_csv()
-    # c.save_pattern_csv()
+    data = c.open_csv("datasets/combined_data_match_fix_to_merge.csv")
+    print(data[:1130])
