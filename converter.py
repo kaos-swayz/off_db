@@ -74,7 +74,7 @@ class Converter:
 
     """ main converter functions """
 
-    def save_combined_json(self, input_file_name="datasets/combined_data_match_fix_to_merge.csv", output_file_name="combined_data_to_merge.json"):
+    def save_combined_json(self, input_file_name="datasets/combined_data_match_fix_to_merge.csv", output_file_name="datasets/combined_data_to_merge.json"):
         self.data_to_json(function=self.convert_data_to_json_format, input_file_name=input_file_name, output_file_name=output_file_name)
 
     """ component converter functions """
@@ -84,15 +84,14 @@ class Converter:
 
         json_data = function(data)
 
-        # save_json_file(file_name=output_file_name, content=)
-        return json_data
+        save_json_file(file_name=output_file_name, content=json_data)
 
     def convert_data_to_json_format(self, data):
         output = {}
 
         data = data.split("\n")
 
-        print(data[0])
+        # print(data[0])
 
         el_dict = {
             0: "name",
@@ -154,30 +153,33 @@ class Converter:
 
         for e in data:
             item_index = data.index(e)
-            if item_index in range(1,12):
-                item = e.split("|")
-                output[item_index] = {}
+            if item_index in range(1,len(data)):
+                try:
+                    item = e.split("|")
+                    output[item_index] = {}
 
-                output[item_index]["01.main_data"] = {}
-                output[item_index]["02.location_details"] = {}
-                output[item_index]["03.offer_details"] = {}
-                output[item_index]["04.building_details"] = {}
-                output[item_index]["05.fitout_standard"] = {}
-                output[item_index]["09.metadata"] = {}
+                    output[item_index]["01.main_data"] = {}
+                    output[item_index]["02.location_details"] = {}
+                    output[item_index]["03.offer_details"] = {}
+                    output[item_index]["04.building_details"] = {}
+                    output[item_index]["05.fitout_standard"] = {}
+                    output[item_index]["09.metadata"] = {}
 
-                for i in el_dict.keys():
-                    if i in range(0, 7):
-                        output[item_index]["01.main_data"][el_dict[i]] = self.determine_value(item[i])
-                    elif i in range(7, 11):
-                        output[item_index]["02.location_details"][el_dict[i]] = self.determine_value(item[i])
-                    elif i in range(11, 22):
-                        output[item_index]["03.offer_details"][el_dict[i]] = self.determine_value(item[i])
-                    elif i in range(22, 33):
-                        output[item_index]["04.building_details"][el_dict[i]] = self.determine_value(item[i])
-                    elif i in range(33, 49):
-                        output[item_index]["05.fitout_standard"][el_dict[i]] = self.determine_value(item[i])
-                    elif i in range(49, 56):
-                        output[item_index]["09.metadata"][el_dict[i]] = self.determine_value(item[i])
+                    for i in el_dict.keys():
+                        if i in range(0, 7):
+                            output[item_index]["01.main_data"][el_dict[i]] = self.determine_value(item[i])
+                        elif i in range(7, 11):
+                            output[item_index]["02.location_details"][el_dict[i]] = self.determine_value(item[i])
+                        elif i in range(11, 22):
+                            output[item_index]["03.offer_details"][el_dict[i]] = self.determine_value(item[i])
+                        elif i in range(22, 33):
+                            output[item_index]["04.building_details"][el_dict[i]] = self.determine_value(item[i])
+                        elif i in range(33, 49):
+                            output[item_index]["05.fitout_standard"][el_dict[i]] = self.determine_value(item[i])
+                        elif i in range(49, 56):
+                            output[item_index]["09.metadata"][el_dict[i]] = self.determine_value(item[i])
+                except IndexError as err:
+                    print("Exception {} at {}: {}".format(err, item_index, item))
 
         return output
 
@@ -200,13 +202,4 @@ class Converter:
 if __name__ == "__main__":
     c = Converter()
 
-    data = c.data_to_json(function=c.convert_data_to_json_format, input_file_name="datasets/combined_data_match_fix_to_merge.csv", output_file_name="datasets/test.json")
-
-    n = 0
-    for e in data:
-        for section in data[e].keys():
-            print(section)
-            print(data[e][section])
-        # n += 1
-        # if n == 3:
-        #     break
+    c.save_combined_json()
