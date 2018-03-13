@@ -154,8 +154,9 @@ class Converter:
         for e in data:
             item_index = data.index(e)
             if item_index in range(1,len(data)):
-                try:
-                    item = e.split("|")
+                # try:
+                item = e.split("|")
+                if len(item) > 5:
                     output[item_index] = {}
 
                     output[item_index]["01.main_data"] = {}
@@ -178,8 +179,8 @@ class Converter:
                             output[item_index]["05.fitout_standard"][el_dict[i]] = self.determine_value(item[i])
                         elif i in range(49, 56):
                             output[item_index]["09.metadata"][el_dict[i]] = self.determine_value(item[i])
-                except IndexError as err:
-                    print("Exception {} at {}: {}".format(err, item_index, item))
+                # except IndexError as err:
+                #     print("Exception {} at {}: {}".format(err, item_index, item))
 
         return output
 
