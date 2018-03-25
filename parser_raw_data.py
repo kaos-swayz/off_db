@@ -39,6 +39,129 @@ class ParserRawData:
 
 
     """ fetch functions """
+    """ fetchers """
+
+    def fetch_raw_data(self, soup, url):
+        print("fetching data from: " + url)
+
+        if self.try_if_not_404(soup, url) == True:
+
+            output = []
+
+            # id
+            self.fetch_id(output=output, soup=soup, url=url)
+            # name
+            self.fetch_name(output=output, soup=soup, url=url)
+            # source
+            self.fetch_source(output=output, soup=soup, url=url)
+            # url
+            output.append(url)
+            # img url
+            self.fetch_photo(output=output, soup=soup, url=url)
+            # address
+            self.fetch_address(output=output, soup=soup, url=url)
+            # all data
+            self.fetch_all_data(output=output, soup=soup, url=url)
+            # empty string for debuging reasons
+            output.append("")
+
+
+            print(output)
+            return output
+
+
+    """ value fetchers """
+
+    def fetch_id(self, output, soup, url):
+        if self.name_of_set == "rm":
+            self.fetch_property(soup, output_list=output, html_target_element="h1", property_name="data-id")
+        elif self.name_of_set == "bj":
+            output.append(url[28:url.find(".html")])
+        elif self.name_of_set == "oc":
+            pass
+        else:
+            pass
+
+    def fetch_name(self, output, soup, url):
+        if self.name_of_set == "rm":
+            self.fetch_element(soup, output_list=output, html_target_element="h1", css_css_id_value="h3")
+        elif self.name_of_set == "bj":
+            output.append(url[url.find("www") + 4:url.find(".", url.find("www") + 5)])
+        elif self.name_of_set == "oc":
+            pass
+        else:
+            pass
+
+    def fetch_source(self, output, soup, url):
+        if self.name_of_set == "rm":
+            output.append("rm")
+        elif self.name_of_set == "bj":
+            output.append("bj")
+        elif self.name_of_set == "oc":
+            output.append("oc")
+        else:
+            pass
+
+    def fetch_photo(self, output, soup, url):
+        temp_list = []
+        try:
+            if self.name_of_set == "rm":
+                self.fetch_property(soup, output_list=temp_list, html_target_element="div", property_name="data-bg",
+                                    css_id_type="class",
+                                    css_id_value="rmb-object-slide")
+                output.append(self.url_base[0] + temp_list[0])
+            elif self.name_of_set == "bj":
+                element = soup.find("div", {"class": "building-carousel"})
+                self.fetch_property(element, output_list=temp_list, html_target_element="img", property_name="src")
+                output.append(temp_list[0])
+            elif self.name_of_set == "oc":
+                pass
+            else:
+                pass
+        except AttributeError as err:
+            # print("An error: {} have occured on url: {}".format(err, url))
+            output.append("")
+
+    def fetch_address(self, output, soup, url):
+        if self.name_of_set == "rm":
+            pass
+        elif self.name_of_set == "bj":
+            self.fetch_element(soup, output_list=output, html_target_element="p", css_css_id_value="location")
+        elif self.name_of_set == "oc":
+            pass
+        else:
+            pass
+
+    def fetch_all_data(self, output, soup, url):
+        if self.name_of_set == "rm":
+            #all_data
+            self.fetch_element(soup, output_list=output, html_target_element="div",
+                               css_css_id_value="rmb-details-list-item")
+            # disabled fit-out elements
+            fitout_disabled = []
+            self.fetch_element(soup, output_list=fitout_disabled, html_target_element="span",
+                               css_css_id_value="rmb-details-list-disabled")
+            output.append(fitout_disabled)
+        elif self.name_of_set == "bj":
+            bj_offer_sec = ["Available space", "Availability", "Asking rent", "Rent for parking",
+                            "Minimum office unit",
+                            "Minimum lease term", "Service charge"]
+            for e in [e.text for e in soup.find_all("p")]:
+                if e == "Building completely leased.":
+                    for e in bj_offer_sec:
+                        output.append(e + "Leased")
+            element = soup.find("section", {"class": "building-details"})
+            self.fetch_element(element, output_list=output, html_target_element="li")
+        elif self.name_of_set == "oc":
+            pass
+        else:
+            pass
+
+
+
+
+
+    """ fetching components """
 
     def fetch_element(self, soup, output_list, html_target_element, css_id_type="class", css_css_id_value=None):
         for e in soup.find_all(html_target_element, {css_id_type: css_css_id_value}):
@@ -49,99 +172,6 @@ class ParserRawData:
         output_list.append(property_value)
 
 
-
-    """ chooses fetcher based on what dataset we are in """
-
-    def fetch_raw_data(self, soup, url):
-
-        if self.name_of_set == "rm":
-            return self.fetch_raw_data_rm(soup, url)
-        if self.name_of_set == "bj":
-            return self.fetch_raw_data_bj(soup,url)
-
-
-
-    """ fetchers """
-
-    def fetch_raw_data_rm(self, soup, url):
-        print("fetching data from: " + url)
-
-        output = []
-        #id
-        self.fetch_property(soup, output_list=output, html_target_element="h1", property_name="data-id")
-        #name
-        self.fetch_element(soup, output_list=output, html_target_element="h1", css_css_id_value="h3")
-        #source
-        output.append(url[url.find("www")+4:url.find(".",url.find("www")+5)])
-        #url
-        output.append(url)
-        #img url
-        temp_list = []
-        try:
-            self.fetch_property(soup, output_list=temp_list, html_target_element="div", property_name="data-bg", css_id_type="class",
-                       css_id_value="rmb-object-slide")
-            output.append(self.url_base[0] + temp_list[0])
-        except AttributeError as err:
-            # print("An error: {} have occured on url: {}".format(err, url))
-            output.append("")
-        #all data
-        self.fetch_element(soup, output_list=output, html_target_element="div", css_css_id_value="rmb-details-list-item")
-        #disabled fit-out elements
-        fitout_disabled = []
-        self.fetch_element(soup, output_list=fitout_disabled, html_target_element="span", css_css_id_value="rmb-details-list-disabled")
-        output.append(fitout_disabled)
-        # empty string for debuging reasons
-        output.append("")
-
-        print(output)
-        return output
-
-    def fetch_raw_data_bj(self, soup, url):
-        print("fetching data from: " + url)
-
-        if self.try_if_not_404(soup, url) == True:
-
-            output = []
-
-            # id
-            output.append(url[28:url.find(".html")])
-            # name
-            self.fetch_element(soup, output_list=output, html_target_element="h1")
-            # source
-            output.append(url[url.find("www") + 4:url.find(".", url.find("www") + 5)])
-            # url
-            output.append(url)
-            # img url
-            temp_list = []
-            try:
-                element = soup.find("div", {"class": "building-carousel"})
-                self.fetch_property(element, output_list=temp_list, html_target_element="img", property_name="src")
-                output.append(temp_list[0])
-            except AttributeError as err:
-                # print("An error: {} have occured on url: {}".format(err, url))
-                output.append("")
-            # address
-            self.fetch_element(soup, output_list=output, html_target_element="p", css_css_id_value="location")
-            # all data
-            # print("Building completely leased" in [e.text for e in soup.find_all("p")])
-            bj_offer_sec = ["Available space", "Availability", "Asking rent", "Rent for parking", "Minimum office unit",
-                            "Minimum lease term", "Service charge"]
-            for e in [e.text for e in soup.find_all("p")]:
-                if e == "Building completely leased.":
-                    for e in bj_offer_sec:
-                        output.append(e + "Leased")
-            element = soup.find("section", {"class": "building-details"})
-            self.fetch_element(element, output_list=output, html_target_element="li")
-            # #disabled fit-out elements
-            # fitout_disabled = []
-            # fetch_element(soup, output_list=fitout_disabled, html_target_element="span", css_css_id_value="rmb-details-list-disabled")
-            # output.append(fitout_disabled)
-            # empty string for debuging reasons
-            output.append("")
-
-
-            print(output)
-            return output
 
     """ final parser function """
 
