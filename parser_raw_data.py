@@ -8,15 +8,37 @@ import bs4 as bs
 
 
 class ParserRawData:
-    def __init__(self, urls_input_file):
-        self.urls = unpack_data_file(urls_input_file)
+    def __init__(self, name_of_set):
+        self.name_of_set = name_of_set
+        self.url_base_file = "urls/bs4_url_base_datapack_{}.txt".format(self.name_of_set)
+        self.url_base = unpack_data_file("urls/bs4_url_base_datapack_{}.txt".format(self.name_of_set))
 
-        # name_of_set derivative - variables that are made basing on what set we want to parse
-        # what is there is no name of set
-        self.name_of_set = urls_input_file[urls_input_file.rfind("_") + 1:urls_input_file.find(".")]
-        self.url_base = unpack_data_file("urls/url_base_datapack_{}.txt".format(self.name_of_set))
-        self.raw_data_output_file = "datasets/raw_data_{}.json".format(self.name_of_set)
+        self.urls = unpack_data_file("urls/st1_urls_set_{}.txt".format(self.name_of_set))
+        self.raw_data_output_file = "datasets/st1_raw_data_{}.json".format(self.name_of_set)
 
+
+
+
+    """ MAIN FUNCTIONS """
+
+    def parse_by_links(self, urls, output_file_name, max_iterations=9999):
+        # parses through all elements
+        output = []
+
+        n = 0
+        for e in urls:
+            e = self.bug_fixer(url=e, set=self.name_of_set)
+            output.append(self.fetch_raw_data(fetch_soup(e), url=e))
+
+            n += 1
+            if n == max_iterations:
+                break
+        save_json_file(file_name=output_file_name, content=output)
+
+
+
+
+    """ fetch functions """
 
     def fetch_element(self, soup, output_list, html_target_element, css_id_type="class", css_css_id_value=None):
         for e in soup.find_all(html_target_element, {css_id_type: css_css_id_value}):
@@ -60,7 +82,7 @@ class ParserRawData:
                        css_id_value="rmb-object-slide")
             output.append(self.url_base[0] + temp_list[0])
         except AttributeError as err:
-            print("An error: {} have occured on url: {}".format(err, url))
+            # print("An error: {} have occured on url: {}".format(err, url))
             output.append("")
         #all data
         self.fetch_element(soup, output_list=output, html_target_element="div", css_css_id_value="rmb-details-list-item")
@@ -71,6 +93,7 @@ class ParserRawData:
         # empty string for debuging reasons
         output.append("")
 
+        print(output)
         return output
 
     def fetch_raw_data_bj(self, soup, url):
@@ -95,7 +118,7 @@ class ParserRawData:
                 self.fetch_property(element, output_list=temp_list, html_target_element="img", property_name="src")
                 output.append(temp_list[0])
             except AttributeError as err:
-                print("An error: {} have occured on url: {}".format(err, url))
+                # print("An error: {} have occured on url: {}".format(err, url))
                 output.append("")
             # address
             self.fetch_element(soup, output_list=output, html_target_element="p", css_css_id_value="location")
@@ -117,22 +140,12 @@ class ParserRawData:
             output.append("")
 
 
-            # print(output)
+            print(output)
             return output
 
     """ final parser function """
 
-    def parse_by_links(self, urls, output_file_name, max_iterations=9999):
-        # parses through all elements
-        output = []
-        n = 0
-        for e in urls:
-            e = self.bug_fixer(url=e, set=self.name_of_set)
-            output.append(self.fetch_raw_data(fetch_soup(e), url=e))
-            n += 1
-            if n == max_iterations:
-                break
-        save_json_file(file_name=output_file_name, content=output)
+
 
     def bug_fixer(self, url, set):
         if set == "rm":
@@ -150,6 +163,6 @@ class ParserRawData:
 
 
 if __name__ == "__main__":
-    p = ParserRawData(urls_input_file="urls/urls_output_rm.txt")
-    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
+    p = ParserRawData("rm")
+    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file, max_iterations=5)
     # p.fetch_raw_data_bj(fetch_soup("https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html"), "https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html")
