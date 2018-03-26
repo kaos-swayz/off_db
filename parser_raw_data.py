@@ -189,10 +189,23 @@ class ParserRawData:
         else:
             return True
 
+    def browse_data(self, file_name=None, max_iterations=9999):
+        if file_name == None:
+            file_name = self.raw_data_output_file
 
+        data = open_json_file(file_name)
 
+        n = 0
+        for e in data:
+            n += 1
+            print(n)
+            print(e)
+            if n >= max_iterations:
+                break
 
 if __name__ == "__main__":
-    p = ParserRawData("rm")
-    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
-    # p.fetch_raw_data_bj(fetch_soup("https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html"), "https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html")
+    p = ParserRawData("bj")
+    # p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
+
+    p.browse_data()
+
