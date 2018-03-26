@@ -1,4 +1,4 @@
-from _main import unpack_data_file, fetch_soup, test_connection, save_json_file
+from _main import unpack_data_file, fetch_soup, test_connection, open_json_file, save_json_file
 
 import os
 import requests
@@ -173,9 +173,7 @@ class ParserRawData:
 
 
 
-    """ final parser function """
-
-
+    """ debug """
 
     def bug_fixer(self, url, set):
         if set == "rm":
@@ -192,7 +190,9 @@ class ParserRawData:
             return True
 
 
+
+
 if __name__ == "__main__":
     p = ParserRawData("rm")
-    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file, max_iterations=5)
+    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
     # p.fetch_raw_data_bj(fetch_soup("https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html"), "https://www.officefinder.pl/office-katowice-centrum-biurowe-francuska-a-sublease-2155.html")
