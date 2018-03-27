@@ -78,17 +78,17 @@ class ParserRawData:
         elif self.name_of_set == "bj":
             output.append(url[28:url.find(".html")])
         elif self.name_of_set == "oc":
-            pass
+            output.append(url[url.rfind("/") + 1:])
         else:
             pass
 
     def fetch_name(self, output, soup, url):
         if self.name_of_set == "rm":
-            self.fetch_element(soup, output_list=output, html_target_element="h1", css_css_id_value="h3")
+            self.fetch_element(soup, output_list=output, html_target_element="h1", css_id_value="h3")
         elif self.name_of_set == "bj":
             output.append(url[url.find("www") + 4:url.find(".", url.find("www") + 5)])
         elif self.name_of_set == "oc":
-            pass
+            self.fetch_element(soup, output_list=output, html_target_element="h1", css_id_value="office-name")
         else:
             pass
 
@@ -115,7 +115,10 @@ class ParserRawData:
                 self.fetch_property(element, output_list=temp_list, html_target_element="img", property_name="src")
                 output.append(temp_list[0])
             elif self.name_of_set == "oc":
-                pass
+                self.fetch_property(soup, output_list=temp_list, html_target_element="a", property_name="href",
+                                    css_id_type="class",
+                                    css_id_value="fancybox")
+                output.append(temp_list[0])
             else:
                 pass
         except AttributeError as err:
@@ -126,9 +129,11 @@ class ParserRawData:
         if self.name_of_set == "rm":
             pass
         elif self.name_of_set == "bj":
-            self.fetch_element(soup, output_list=output, html_target_element="p", css_css_id_value="location")
+            self.fetch_element(soup, output_list=output, html_target_element="p", css_id_value="location")
         elif self.name_of_set == "oc":
-            pass
+            temp_list = []
+            self.fetch_element(soup, output_list=temp_list, html_target_element="p", css_id_value="office-address")
+            output.append(temp_list[0].strip())
         else:
             pass
 
@@ -136,11 +141,11 @@ class ParserRawData:
         if self.name_of_set == "rm":
             #all_data
             self.fetch_element(soup, output_list=output, html_target_element="div",
-                               css_css_id_value="rmb-details-list-item")
+                               css_id_value="rmb-details-list-item")
             # disabled fit-out elements
             fitout_disabled = []
             self.fetch_element(soup, output_list=fitout_disabled, html_target_element="span",
-                               css_css_id_value="rmb-details-list-disabled")
+                               css_id_value="rmb-details-list-disabled")
             output.append(fitout_disabled)
         elif self.name_of_set == "bj":
             bj_offer_sec = ["Available space", "Availability", "Asking rent", "Rent for parking",
@@ -153,7 +158,17 @@ class ParserRawData:
             element = soup.find("section", {"class": "building-details"})
             self.fetch_element(element, output_list=output, html_target_element="li")
         elif self.name_of_set == "oc":
-            pass
+            temp_list = []
+            self.fetch_element(soup, output_list=temp_list, html_target_element="tr")
+            for e in temp_list:
+                output.append(" ".join(e.split()))
+            #fitout elements
+            # self.fetch_element(soup, output_list=temp_list, html_target_element="li", css_id_type="class", css_id_value="office-fitout-item")
+            temp_list = []
+            self.fetch_element(soup, output_list=temp_list, html_target_element="li",
+                               css_id_value="office-fitout-item")
+            for e in temp_list:
+                output.append(" ".join(e.split()))
         else:
             pass
 
@@ -163,8 +178,8 @@ class ParserRawData:
 
     """ fetching components """
 
-    def fetch_element(self, soup, output_list, html_target_element, css_id_type="class", css_css_id_value=None):
-        for e in soup.find_all(html_target_element, {css_id_type: css_css_id_value}):
+    def fetch_element(self, soup, output_list, html_target_element, css_id_type="class", css_id_value=None):
+        for e in soup.find_all(html_target_element, {css_id_type: css_id_value}):
             output_list.append(e.text.replace("\n", ""))
 
     def fetch_property(self, soup, output_list, html_target_element, property_name, css_id_type=None, css_id_value=None):
@@ -184,7 +199,7 @@ class ParserRawData:
         return url
 
     def try_if_not_404(self, soup, url):
-        if "error 404" in soup.title.text.lower():
+        if "404" in soup.title.text.lower():
             return False
         else:
             return True
@@ -204,7 +219,7 @@ class ParserRawData:
                 break
 
 if __name__ == "__main__":
-    p = ParserRawData("bj")
+    p = ParserRawData("oc")
     # p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
 
     p.browse_data()
