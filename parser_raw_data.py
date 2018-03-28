@@ -21,7 +21,7 @@ class ParserRawData:
 
     """ MAIN FUNCTIONS """
 
-    def parse_by_links(self, urls, output_file_name, max_iterations=9999):
+    def parse_by_links(self, urls, output_file_name, max_iterations=9999, save_data=True):
         # parses through all elements
         output = []
 
@@ -33,7 +33,9 @@ class ParserRawData:
             n += 1
             if n == max_iterations:
                 break
-        save_json_file(file_name=output_file_name, content=output)
+
+        if save_data == True:
+            save_json_file(file_name=output_file_name, content=output)
 
 
 
@@ -132,8 +134,19 @@ class ParserRawData:
             self.fetch_element(soup, output_list=output, html_target_element="p", css_id_value="location")
         elif self.name_of_set == "oc":
             temp_list = []
-            self.fetch_element(soup, output_list=temp_list, html_target_element="p", css_id_value="office-address")
-            output.append(temp_list[0].strip())
+            soup = soup.find_all("p", {"class" : "office-address"})
+            address = soup[0].find("span", {"class": "office-street"})
+            district = soup[0].find("span", {"class": "office-district"})
+            city = soup[0].find("span", {"class": "office-city"})
+            if address != None:
+                address = "adress:{}".format(address.text)
+            if district != None:
+                district = "district:{}".format(district.text)
+            if city != None:
+                city = "city:{}".format(city.text)
+            full_address = "{}{}{}#".format(address, district, city)
+            # self.fetch_element(soup, output_list=temp_list, html_target_element="p", css_id_value="office-address")
+            output.append(full_address)
         else:
             pass
 
@@ -218,9 +231,11 @@ class ParserRawData:
             if n >= max_iterations:
                 break
 
+        return data
+
 if __name__ == "__main__":
     p = ParserRawData("oc")
-    # p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
+    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file, max_iterations=50)
 
-    p.browse_data()
+    # data = p.browse_data()
 
