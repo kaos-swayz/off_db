@@ -4,12 +4,10 @@ import re
 
 
 class Restructor:
-    def __init__(self, raw_data_file):
-        self.raw_data = open_json_file(raw_data_file)
+    def __init__(self, name_of_set):
+        self.name_of_set = name_of_set
+        self.raw_data = open_json_file("datasets/st1_raw_data_{}.json".format(self.name_of_set))
 
-        # name_of_set derivative - variables that are made basing on what set we want to parse
-        # what is there is no name of set
-        self.name_of_set = raw_data_file[raw_data_file.rfind("_") + 1:raw_data_file.find(".")]
 
     """ basic functions """
     """ function that can be useful """
@@ -56,15 +54,13 @@ class Restructor:
         # print(e)
         if set == "rm"  :   return e[1]
         elif set == "bj":   return e[1]
-        elif set == "oc":   pass
+        elif set == "oc":   return e[1]
         elif set == "zhand":
             return self.return_after_input(e, "Property name  ")
 
     # item["01.main_data"]["type"]
     def s_01_type(self, e, set):
-        if set in ["rm", "bj"]  :   return self.get_type(e[1])
-        elif set == "oc":
-            pass
+        if set in ["rm", "bj", "oc"]  :   return self.get_type(e[1])
         elif set == "zhand":
             return self.get_type(e[0])
 
@@ -87,8 +83,31 @@ class Restructor:
         if set in ["rm", "bj"]  :   return self.get_city(e[5])
         elif set == "zhand"     :   return self.return_after_input(e, "City ")
     
-    def get_city(self, e):
-        return e[:e.find(",")]
+    def get_city(self, e, set):
+        translation_dict = {
+            'Cracow': 'Kraków',
+            'Bialystok': 'Białystok',
+            'Bydgoszcz': 'Bydgoszcz',
+            'Nowy Sacz': 'Nowy Sącz',
+            'Rzeszow': 'Rzeszów',
+            'Gdansk': 'Gdańsk',
+            'Poznan': 'Poznań',
+            'Torun': 'Toruń',
+            'Wroclaw': 'Wrocław',
+            'Zielona Gora': 'Zielona Góra',
+            'Lodz': 'Łódź',
+            'Warsaw': 'Warszawa',
+        }
+
+        if set in ["rm", "bj"]:
+            city = e[:e.find(",")]
+        elif set == "oc":
+            city = e[e.rfind(","):]
+
+        if city in translation_dict.keys():
+            city = translation_dict[city]
+
+        return city
     
     # item["02.location_details"]["district"]
     def s_02_district(self, e, set):
@@ -575,8 +594,10 @@ class Restructor:
 
 
 
-    def restruct_data(self, raw_data, set):
+    def restruct_data(self, raw_data, set, max_iterations=9999):
         output = []
+
+        n = 0
         for e in raw_data:
             if e is not None:
                 item = {}
@@ -585,6 +606,9 @@ class Restructor:
                 item["01.main_data"]["name"] = self.s_01_name(e, set)
                 item["01.main_data"]["type"] = self.s_01_type(e, set)
                 item["01.main_data"]["source"] = self.s_01_source(e, set)
+                item["01.main_data"]["id"] = e[0]
+                item["01.main_data"]["match_id"] = ""
+                item["01.main_data"]["match_level"] = ""
 
                 item["02.location_details"] = {}
                 item["02.location_details"]["city"] = self.s_02_city(e, set)
@@ -667,13 +691,17 @@ class Restructor:
                 item["09.metadata"]["bj_pic_url"] = self.s_09_bj_pic_url(e, set)
                 item["09.metadata"]["add_info"] = self.s_09_add_info(e, set)
 
-
+                print(item)
                 output.append(item)
+            n += 1
+            if n == max_iterations:
+                break
+
         return output
 
 
     def save_to_json(self, data):
-        file_name = "datasets/final_data_{}.json".format(self.name_of_set)
+        file_name = "datasets/final_data_add_{}.json".format(self.name_of_set)
         save_json_file(file_name=file_name, content=data)
 
 
@@ -682,10 +710,10 @@ class Restructor:
 
 
 if __name__ == "__main__":
-    r = Restructor(raw_data_file="datasets/raw_data_rm.json")
+    r = Restructor("oc")
     print(len(r.raw_data))
     print(r.name_of_set)
 
-    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
+    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set, max_iterations=5)
 
-    r.save_to_json(data)
+    # r.save_to_json(data)
