@@ -8,6 +8,75 @@ class Restructor:
         self.name_of_set = name_of_set
         self.raw_data = open_json_file("datasets/st1_raw_data_{}.json".format(self.name_of_set))
 
+
+
+        self.item_pattern = {
+            '01.main_data': {
+                'name': '',
+                'type': '',
+                'source': '',
+                'id': '',
+                'match_id': '',
+                'match_level': ''},
+            '02.location_details': {
+                'city': '',
+                'district': '',
+                'address': ''},
+            '03.offer_details': {
+                'av_office': '',
+                'av_office_vol': '',
+                'rent_office': '',
+                'rent_retail': '',
+                'rent_warehouse': '',
+                'service_charge': '',
+                'cost_parking_surface': '',
+                'cost_parking_underground': '',
+                'min_space_to_let': '',
+                'min_lease': '',
+                'add_on_factor': ''},
+            '04.building_details': {
+                'building_status': '',
+                'building_class': '',
+                'total_net_space': '',
+                'total_gross_space': '',
+                'completion_date': '',
+                'ground_floors': '',
+                'underground_floors': '',
+                'floor_plate': '',
+                'no_surface_parking': '',
+                'no_underground_parking': '',
+                'parking_ratio': '',
+                'building_certification': ''},
+            '05.fitout_standard': {
+                'sprinklers': '',
+                'access_control': '',
+                'computer_cabling': '',
+                'switchboard': '',
+                'smoke_detectors': '',
+                'suspended_ceiling': '',
+                'openable_windows': '',
+                'partition_walls': '',
+                'backup_power_supply': '',
+                'telephone_cabling': '',
+                'power_cabling': '',
+                'air_conditioning': '',
+                'raised_floor': '',
+                'carpeting': '',
+                'fibre_optic_connections': '',
+                'BMS': ''},
+            '09.metadata': {
+                'rm_id': '',
+                'rm_url': '',
+                'rm_pic_url': '',
+                'bj_id': '',
+                'bj_url': '',
+                'bj_pic_url': '',
+                'oc_id': '',
+                'oc_url': '',
+                'oc_pic_url': '',
+                'add_info': ''}
+        }
+
         self.translate_dict_bj = {
             "Log in" : "",
             "Leased" : ""
@@ -199,7 +268,8 @@ class Restructor:
             return not self.return_true_if_input(e[self.get_index_based_on_input(e, "Total available office area".lower())], input=" 0 ")
         elif set == "bj"        :
             return not self.return_true_if_input(e, input="Leased".lower())
-
+        elif set == "oc":
+            return ""
         elif set == "zhand"     :    return ""
     
 
@@ -209,14 +279,13 @@ class Restructor:
         if set == "rm"          :
             return self.return_digit(e[self.get_index_based_on_input(e, "Total available office area ".lower())])
         elif set == "bj"        :
-            return self.get_offer_details_bj(e)
-
+            return ""
+        elif set == "oc":
+            return ""
         elif set == "zhand":
             return ""
-    
-    def get_offer_details_bj(self, e):
-        return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())],12).replace("Log in", "").replace("Leased", "")
-    
+
+
     # item["03.offer_details"]["rent_office"]
     def s_03_rent_office(self, e, set):
         if set == "rm":
@@ -234,9 +303,9 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Asking rent for retail space".lower())])
         elif set == "bj":
-            return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-                "Log in", "")
-
+            return ""
+        elif set == "oc":
+            return ""
         elif set == "zhand"     :   return ""
         
         
@@ -246,7 +315,7 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Asking rent for industrial space".lower())])
         elif set == "bj"        :    return ""
-
+        elif set == "oc"        :    return ""
         elif set == "zhand"     :    return ""
     
     
@@ -255,9 +324,9 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Service charge".lower())]).replace(" / month", "")
         elif set == "bj":
-            return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-                "Log in", "").replace("Leased", "")
-
+            return ""
+        elif set == "oc":
+            return ""
         elif set == "zhand":
             return "{}{}".format(self.return_after_input(e, "Service charge Q2 2013 "), e[19].replace("Currency", ""))
     
@@ -267,9 +336,9 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Surface parking rent".lower())])
         elif set == "bj":
-            return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-                "Log in", "").replace("Leased", "")
-
+            return ""
+        elif set == "oc":
+            return ""
         elif set == "zhand":
             return "{}{}".format(self.return_after_input(e, "naziemne parking fee "), e[22].replace("Currency", ""))
 
@@ -279,9 +348,9 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Underground parking rent".lower())])
         elif set == "bj":
-            return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-                "Log in", "")
-
+            return ""
+        elif set == "oc":
+            return ""
         elif set == "zhand":
             return "{}{}".format(self.return_after_input(e, "podziemne parking fee "), e[22].replace("Currency", ""))
     
@@ -291,8 +360,7 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Minimum office space to let".lower())])
         elif set == "bj":
-            return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-                "Log in", "")
+            return ""
         elif set == "oc":
             return self.return_after_input(e, "Minimalny moduł biurowy ")
         elif set == "zhand":
@@ -303,8 +371,7 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Minimum lease term".lower())])
         elif set == "bj":
-            return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-                "Log in", "")
+            return ""
         elif set == "oc":
             return self.return_after_input(e, "Minimalny okres najmu ").replace("lata", "years").replace("lat", "years").replace("rok", "year")
         elif set == "zhand":
@@ -315,9 +382,7 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Add-on factor".lower())])
         elif set == "bj":
-            return self.translate(result=self.return_after_input(e, "Availability"), translate_dict=self.translate_dict_bj)
-            # return self.return_from_index(e[self.get_index_based_on_input(e, "Availability".lower())], 12).replace(
-            #     "Log in", "")
+            return ""
         elif set == "oc":
             return self.return_after_input(e, "Współczynnik powierzchni wspólnych")
         elif set == "zhand":
@@ -703,22 +768,20 @@ class Restructor:
         n = 0
         for e in raw_data:
             if e is not None:
-                item = {}
+                item = self.item_pattern.copy()
 
-                item["01.main_data"] = {}
+                # item["01.main_data"] = {}
                 item["01.main_data"]["name"] = self.s_01_name(e, set)
                 item["01.main_data"]["type"] = self.s_01_type(e, set)
                 item["01.main_data"]["source"] = self.s_01_source(e, set)
                 item["01.main_data"]["id"] = e[0]
-                item["01.main_data"]["match_id"] = ""
-                item["01.main_data"]["match_level"] = ""
 
-                item["02.location_details"] = {}
+                # item["02.location_details"] = {}
                 item["02.location_details"]["city"] = self.s_02_city(e, set)
                 item["02.location_details"]["district"] = self.s_02_district(e, set)
                 item["02.location_details"]["address"] = self.s_02_address(e, set)
 
-                item["03.offer_details"] = {}
+                # item["03.offer_details"] = {}
                 item["03.offer_details"]["av_office"] = self.s_03_av_office(e, set)
                 item["03.offer_details"]["av_office_vol"] = self.s_03_av_office_vol(e, set)
                 item["03.offer_details"]["rent_office"] = self.s_03_rent_office(e, set)
@@ -731,7 +794,7 @@ class Restructor:
                 item["03.offer_details"]["min_lease"] = self.s_03_min_lease(e, set)
                 item["03.offer_details"]["add_on_factor"] = self.s_03_add_on_factor(e, set)
 
-                item["04.building_details"] = {}
+                # item["04.building_details"] = {}
                 item["04.building_details"]["building_status"] = self.s_04_building_status(e, set)
                 item["04.building_details"]["building_class"] = self.s_04_building_class(e, set)
                 item["04.building_details"]["total_net_space"] = self.s_04_total_net_space(e, set)
@@ -745,7 +808,7 @@ class Restructor:
                 item["04.building_details"]["parking_ratio"] = self.s_04_parking_ratio(e, set)
                 item["04.building_details"]["building_certification"] = self.s_04_building_certification(e, set)
 
-                item["05.fitout_standard"] = {}
+                # item["05.fitout_standard"] = {}
                 item["05.fitout_standard"]["sprinklers"] = self.s_05_sprinklers(e, set)
                 item["05.fitout_standard"]["access_control"] = self.s_05_access_control(e, set)
                 item["05.fitout_standard"]["computer_cabling"] = self.s_05_computer_cabling(e, set)
@@ -786,7 +849,7 @@ class Restructor:
                     for fitoout_e in e[-2]:
                         item["05.fitout_standard"][translate_dict[fitoout_e]] = False
 
-                item["09.metadata"] = {}
+                # item["09.metadata"] = {}
                 item["09.metadata"]["rm_id"] = self.s_09_rm_id(e, set)
                 item["09.metadata"]["rm_url"] = self.s_09_rm_url(e, set)
                 item["09.metadata"]["rm_pic_url"] = self.s_09_rm_pic_url(e, set)
@@ -800,7 +863,7 @@ class Restructor:
 
                 print("***")
                 for e in item:
-                    print(item[e])
+                    print("'{}' : {},".format(e, item[e]))
                 output.append(item)
             n += 1
             if n == max_iterations:
