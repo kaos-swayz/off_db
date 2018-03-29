@@ -88,7 +88,7 @@ class ParserRawData:
         if self.name_of_set == "rm":
             self.fetch_element(soup, output_list=output, html_target_element="h1", css_id_value="h3")
         elif self.name_of_set == "bj":
-            output.append(url[url.find("www") + 4:url.find(".", url.find("www") + 5)])
+            self.fetch_element(soup, output_list=output, html_target_element="h1")
         elif self.name_of_set == "oc":
             self.fetch_element(soup, output_list=output, html_target_element="h1", css_id_value="office-name")
         else:
@@ -234,8 +234,8 @@ class ParserRawData:
         return data
 
 if __name__ == "__main__":
-    p = ParserRawData("oc")
-    p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file, max_iterations=50)
+    p = ParserRawData("bj")
+    # p.parse_by_links(urls=p.urls, output_file_name=p.raw_data_output_file)
 
-    # data = p.browse_data()
+    data = p.browse_data(max_iterations=15)
 
