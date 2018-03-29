@@ -1,5 +1,6 @@
 from _main import open_json_file, save_json_file
 
+from copy import deepcopy
 import re
 
 
@@ -7,6 +8,7 @@ class Restructor:
     def __init__(self, name_of_set):
         self.name_of_set = name_of_set
         self.raw_data = open_json_file("datasets/st1_raw_data_{}.json".format(self.name_of_set))
+        self.restrct_data_output_file = "datasets/st2_restruct_data_{}.json".format(self.name_of_set)
 
 
 
@@ -127,7 +129,7 @@ class Restructor:
         return -1
 
     """ specific functions """
-    """ gets specific data based on name of set """
+    """ to get specific data based on name of set """
 
     """ 01.main_data """
     # item["01.main_data"]["name"]
@@ -135,7 +137,7 @@ class Restructor:
         # print(e)
         if set == "rm"  :   return e[1]
         elif set == "bj":   return e[1]
-        elif set == "oc":   return e[1]
+        elif set == "oc":   return e[1].strip()
         elif set == "zhand":
             return self.return_after_input(e, "Property name  ")
 
@@ -291,8 +293,9 @@ class Restructor:
         if set == "rm":
             return self.return_digit(e[self.get_index_based_on_input(e, "Asking rent for office space".lower())])
         elif set == "bj"        :
-            return self.get_offer_details_bj(e)
-
+            return ""
+        elif set == "oc"        :
+            return ""
         elif set == "zhand":
             return "{}{}".format(self.return_after_input(e, "Asking rent Q2 2013 "), e[17].replace("Currency", ""))
     
@@ -558,7 +561,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Computer cabling".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Kable światłowodowe".lower())
-
         elif set == "zhand":
             return ""
 
@@ -567,7 +569,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Telephone cabling".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Kable światłowodowe".lower())
-
         elif set == "zhand":
             return ""
 
@@ -576,7 +577,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Smoke detectors".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Czujniki dymu".lower())
-
         elif set == "zhand":
             return ""
 
@@ -585,7 +585,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Suspended ceiling".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Podwieszane sufity".lower())
-
         elif set == "zhand":
             return ""
 
@@ -594,7 +593,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Openable windows".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Uchylne okna".lower())
-
         elif set == "zhand":
             return ""
 
@@ -603,7 +601,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Wall partitioning".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Podnoszone podłogi".lower())
-
         elif set == "zhand":
             return ""
 
@@ -612,7 +609,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Emergency power supply".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="aaaa".lower())
-
         elif set == "zhand":
             return ""
 
@@ -621,7 +617,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Telephone cabling".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Kable światłowodowe".lower())
-
         elif set == "zhand":
             return ""
 
@@ -630,7 +625,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Power cabling".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Kable światłowodowe".lower())
-
         elif set == "zhand":
             return ""
 
@@ -639,7 +633,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Air conditioning".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Klimatyzacja".lower())
-
         elif set == "zhand":
             return ""
 
@@ -648,7 +641,6 @@ class Restructor:
         if set == "rm"  :   return True
         elif set == "bj":   return self.return_true_if_input(e, input="Raised floor".lower())
         elif set == "oc":   return self.return_true_if_input(e, input="Podnoszone podłogi".lower())
-
         elif set == "zhand":
             return ""
 
@@ -760,21 +752,27 @@ class Restructor:
         elif set == "zhand":
             return ",".join([e[i].replace('"','') for i in range(23, 32)])
 
+    """ RESTRUCTURING DATA """
+    """ main function """
 
+    def restruct_data(self, raw_data, set, file_name=None, max_iterations=9999, save_data=True):
+        output = {}
 
-    def restruct_data(self, raw_data, set, max_iterations=9999):
-        output = []
+        n = 1
 
-        n = 0
         for e in raw_data:
             if e is not None:
-                item = self.item_pattern.copy()
+                item = deepcopy(self.item_pattern)
+                # item = {}
+
+                id = self.set_id(set=set, n=n)
+
 
                 # item["01.main_data"] = {}
                 item["01.main_data"]["name"] = self.s_01_name(e, set)
                 item["01.main_data"]["type"] = self.s_01_type(e, set)
                 item["01.main_data"]["source"] = self.s_01_source(e, set)
-                item["01.main_data"]["id"] = e[0]
+                item["01.main_data"]["id"] = id
 
                 # item["02.location_details"] = {}
                 item["02.location_details"]["city"] = self.s_02_city(e, set)
@@ -861,24 +859,31 @@ class Restructor:
                 item["09.metadata"]["oc_pic_url"] = self.s_09_oc_pic_url(e, set)
                 item["09.metadata"]["add_info"] = self.s_09_add_info(e, set)
 
-                print("***")
-                for e in item:
-                    print("'{}' : {},".format(e, item[e]))
-                output.append(item)
-            n += 1
-            if n == max_iterations:
-                break
+                output[id] = item
+
+                n += 1
+                if n == max_iterations:
+                    break
+
+        if save_data == True:
+            if file_name == None:
+                file_name = self.restrct_data_output_file
+            save_json_file(file_name=file_name, content=output)
 
         return output
 
+    def set_id(self, n, set):
+        mode_value = 1000000
+        set_value = 0
+        n_value = n
 
-    def save_to_json(self, data):
-        file_name = "datasets/final_data_add_{}.json".format(self.name_of_set)
-        save_json_file(file_name=file_name, content=data)
+        if set == "rm"      :   set_value = 170000
+        elif set == "bj"    :   set_value = 230000
+        elif set == "oc"    :   set_value = 840000
+        elif set == "zhand" :   set_value = 910000
 
-
-
-
+        id = mode_value + set_value + n_value
+        return id
 
 
 if __name__ == "__main__":
@@ -887,5 +892,6 @@ if __name__ == "__main__":
     print(r.name_of_set)
 
     data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set, max_iterations=5)
+    for e in data:
+        print(e, data[e])
 
-    # r.save_to_json(data)
