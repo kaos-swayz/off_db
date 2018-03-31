@@ -892,13 +892,31 @@ class Restructor:
         id = mode_value + set_value + n_value
         return id
 
+    """ debug """
+
+    def browse_data(self, file_name=None, max_iterations=9999):
+        if file_name == None:
+            file_name = self.restruct_data_output_file
+
+        data = open_json_file(file_name)
+
+        n = 0
+        for e in data:
+            n += 1
+            print(n)
+            print(e)
+            if n >= max_iterations:
+                break
+
+        return data
+
 
 if __name__ == "__main__":
-    r = Restructor("oc")
+    r = Restructor("bj")
     print(len(r.raw_data))
     print(r.name_of_set)
 
     data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
-    for e in data:
-        print(e, data[e])
+
+    # r.browse_data()
 
