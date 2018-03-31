@@ -904,7 +904,7 @@ class Restructor:
         for e in data:
             n += 1
             print(n)
-            print(e)
+            print(data[e])
             if n >= max_iterations:
                 break
 
@@ -916,7 +916,7 @@ if __name__ == "__main__":
     print(len(r.raw_data))
     print(r.name_of_set)
 
-    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
+    # data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
 
-    # r.browse_data()
+    r.browse_data()
 
