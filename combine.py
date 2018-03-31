@@ -260,7 +260,12 @@ class Combiner:
         for e in data:
             n += 1
             print(n)
-            print(data[e])
+            if True == True:
+                print(data[e])
+            # if data[e]['01.main_data']['match_id'] == 1230030:
+            #     print(data[e])
+            # if "lchemia" in data[e]['01.main_data']['name'] and data[e]['01.main_data']['source'] == "oc":
+            #     print(data[e])
             if n >= max_iterations:
                 break
 
@@ -272,22 +277,6 @@ if __name__ == "__main__":
 
     data = c.combine_data(save_data=False)
 
-    c.find_matching_data(data=data, save_data=False, max_iterations=31)
+    c.find_matching_data(data=data, save_data=True)
 
-    c.browse_data(data=data)
-
-    # n = 0
-    # for e in data:
-    # #     print(data[e])
-    # #     n += 1
-    # #     if n >= 10:
-    # #         break
-    #
-    #     if data[e]['01.main_data']['match_id'] == 1230030:
-    #         print(data[e])
-
-        # if "lchemia" in data[e]['01.main_data']['name'] and data[e]['01.main_data']['source'] == "oc":
-        #     print(data[e])
-
-    # sim = c.similarity2('Alchemia phase I', 'alchemia - faza I')
-    # print("sim: {}".format(sim))
+    # c.browse_data(data=data)
