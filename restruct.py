@@ -894,11 +894,12 @@ class Restructor:
 
     """ debug """
 
-    def browse_data(self, file_name=None, max_iterations=9999):
+    def browse_data(self, data=None, file_name=None, max_iterations=9999):
         if file_name == None:
             file_name = self.restruct_data_output_file
 
-        data = open_json_file(file_name)
+        if data == None:
+            data = open_json_file(file_name)
 
         n = 0
         for e in data:
