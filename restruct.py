@@ -8,7 +8,7 @@ class Restructor:
     def __init__(self, name_of_set):
         self.name_of_set = name_of_set
         self.raw_data = open_json_file("datasets/st1_raw_data_{}.json".format(self.name_of_set))
-        self.restrct_data_output_file = "datasets/st2_restruct_data_{}.json".format(self.name_of_set)
+        self.restruct_data_output_file = "datasets/st2_restruct_data_{}.json".format(self.name_of_set)
 
 
 
@@ -19,7 +19,10 @@ class Restructor:
                 'source': '',
                 'id': '',
                 'match_id': '',
-                'match_level': ''},
+                'match_level': '',
+                'match_address': '',
+                'match_a_level': '',
+                'm_status': ''},
             '02.location_details': {
                 'city': '',
                 'district': '',
@@ -152,6 +155,10 @@ class Restructor:
             return "sublease"
         elif "sublease" in e.lower():
             return "sublease"
+        elif "serwisowane" in e.lower():
+            return "servised"
+        elif "wirtualne" in e.lower():
+            return "virtual"
         else:
             return "lease"
 
@@ -867,7 +874,7 @@ class Restructor:
 
         if save_data == True:
             if file_name == None:
-                file_name = self.restrct_data_output_file
+                file_name = self.restruct_data_output_file
             save_json_file(file_name=file_name, content=output)
 
         return output
@@ -891,7 +898,7 @@ if __name__ == "__main__":
     print(len(r.raw_data))
     print(r.name_of_set)
 
-    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set, max_iterations=5)
+    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
     for e in data:
         print(e, data[e])
 
