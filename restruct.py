@@ -138,7 +138,7 @@ class Restructor:
     # item["01.main_data"]["name"]
     def s_01_name(self, e, set):
         # print(e)
-        if set == "rm"  :   return e[1]
+        if set == "rm"  :   return e[1].replace("|", "/")
         elif set == "bj":   return e[1]
         elif set == "oc":   return e[1].strip()
         elif set == "zhand":
@@ -211,9 +211,29 @@ class Restructor:
 
     
     def get_district_rm(self, e):
+        translation_dict = {
+            "bemowo": "Bemowo",
+            "bialoleka": "Białołęka",
+            "bielany": "Bielany",
+            "mokotow": "Mokotów",
+            "ochota": "Ochota",
+            "praga-polnoc": "Praga Północ",
+            "praga-poludnie": "Praga Południe",
+            "srodmiescie": "Śródmieście",
+            "targowek": "Targówek",
+            "ursus": "Ursus",
+            "ursynow": "Ursynów",
+            "wilanow": "Wilanów",
+            "wlochy": "Włochy",
+            "zoliborz": "Żoliborz"
+        }
+
         if "warszawa" in e:
-            loc = e.find("warszawa")
-            return e[loc + 9:e.find("/", loc)]
+            dist = e.find("warszawa")
+            dist = e[dist + 9:e.find("/", dist)]
+            if dist in translation_dict.keys():
+                dist = translation_dict[dist]
+            return dist
         else:
             return ""
 
@@ -917,7 +937,7 @@ if __name__ == "__main__":
     print(len(r.raw_data))
     print(r.name_of_set)
 
-    # data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
+    data = r.restruct_data(raw_data=r.raw_data, set=r.name_of_set)
 
-    r.browse_data()
+    r.browse_data(data=data)
 
