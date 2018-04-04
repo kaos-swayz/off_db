@@ -8,14 +8,31 @@ class Converter:
         pass
 
 
+
+    """ CSV manipulations: save & open """
+
+    def save_to_csv(self, file_name, content):
+        if type(content) == str:
+            with open(file_name, "w", encoding="UTF-8") as fp:
+                fp.write(content)
+        print("saved to a file: {}".format(file_name))
+
+    def open_csv(self, file_name):
+        with open(file_name, "r", encoding="UTF-8") as fp:
+            data = fp.read()
+        print("read from a file: {}".format(file_name))
+        return data
+
+
+
     """ JSON to CSV """
 
     """ main converter functions """
 
-    def save_combined_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="datasets/combined_data_match.csv"):
+    def save_combined_csv(self, input_file_name, output_file_name):
         self.data_to_csv(function=self.convert_data_to_csv_format,input_file_name=input_file_name, output_file_name=output_file_name)
 
-    def save_pattern_csv(self, input_file_name="datasets/combined_data_match.json", output_file_name="datasets/_pattern.csv"):
+    def save_pattern_csv(self, input_file_name, output_file_name="datasets/_pattern.csv"):
         self.data_to_csv(function=self.convert_data_to_csv_pattern,input_file_name=input_file_name, output_file_name=output_file_name)
 
     """ component converter functions """
@@ -29,9 +46,12 @@ class Converter:
 
     def convert_data_to_csv_format(self, data):
         output_list = []
+        print(data)
         for item in data:
+
+            print(item)
             building_list = []
-            for nav_dict in data[item]:
+            for nav_dict in data[item].keys():
                 for key in data[item][nav_dict].keys():
                     value = data[item][nav_dict][key]
                     building_list.append((str(value)))
@@ -50,27 +70,18 @@ class Converter:
         item = items[0]
         for nav_dict in data[item]:
             for key in data[item][nav_dict].keys():
-                print(key)
+                # print(key)
                 pattern_list.append(key)
 
         return "|".join(pattern_list)
 
-    """ saving csv """
-
-    def save_to_csv(self, file_name, content):
-        if type(content) == str:
-            with open(file_name, "w", encoding="UTF-8") as fp:
-                fp.write(content)
-        print("saved to a file: {}".format(file_name))
-
-    def open_csv(self, file_name):
-        with open(file_name, "r", encoding="UTF-8") as fp:
-            data = fp.read()
-        print("read from a file: {}".format(file_name))
-        return data
 
 
-    """ JSON to CSV """
+
+
+
+
+    """ CSV to JSON """
 
     """ main converter functions """
 
@@ -103,52 +114,52 @@ class Converter:
             6: "record_rating",
             7: "city",
             8: "district",
-            10: "address",
-            11: "av_office",
-            12: "av_office_vol",
-            13: "rent_office",
-            14: "rent_retail",
-            15: "rent_warehouse",
-            16: "service_charge",
-            17: "cost_parking_surface",
-            18: "cost_parking_underground",
-            19: "min_space_to_let",
-            20: "min_lease",
-            21: "add_on_factor",
-            22: "building_status",
-            23: "building_class",
-            24: "total_net_space",
-            25: "total_gross_space",
-            26: "completion_date",
-            27: "ground_floors",
-            28: "floor_plate",
-            29: "no_surface_parking",
-            30: "no_underground_parking",
-            31: "parking_ratio",
-            32: "building_certification",
-            33: "sprinklers",
-            34: "access_control",
-            35: "computer_cabling",
-            36: "switchboard",
-            37: "smoke_detectors",
-            38: "suspended_ceiling",
-            39: "openable_windows",
-            40: "partition_walls",
-            41: "backup_power_supply",
-            42: "telephone_cabling",
-            43: "power_cabling",
-            44: "air_conditioning",
-            45: "raised_floor",
-            46: "carpeting",
-            47: "fibre_optic_connections",
-            48: "BMS",
-            49: "rm_id",
-            50: "rm_url",
-            51: "rm_pic_url",
-            52: "bj_id",
-            53: "bj_url",
-            54: "bj_pic_url",
-            55: "add_info"
+            9: "address",
+            10: "av_office",
+            11: "av_office_vol",
+            12: "rent_office",
+            13: "rent_retail",
+            14: "rent_warehouse",
+            15: "service_charge",
+            16: "cost_parking_surface",
+            17: "cost_parking_underground",
+            18: "min_space_to_let",
+            19: "min_lease",
+            20: "add_on_factor",
+            21: "building_status",
+            22: "building_class",
+            23: "total_net_space",
+            24: "total_gross_space",
+            25: "completion_date",
+            26: "ground_floors",
+            27: "floor_plate",
+            28: "no_surface_parking",
+            29: "no_underground_parking",
+            30: "parking_ratio",
+            31: "building_certification",
+            32: "sprinklers",
+            33: "access_control",
+            34: "computer_cabling",
+            35: "switchboard",
+            36: "smoke_detectors",
+            37: "suspended_ceiling",
+            38: "openable_windows",
+            39: "partition_walls",
+            40: "backup_power_supply",
+            41: "telephone_cabling",
+            42: "power_cabling",
+            43: "air_conditioning",
+            44: "raised_floor",
+            45: "carpeting",
+            46: "fibre_optic_connections",
+            47: "BMS",
+            48: "rm_id",
+            49: "rm_url",
+            50: "rm_pic_url",
+            51: "bj_id",
+            52: "bj_url",
+            53: "bj_pic_url",
+            54: "add_info"
         }
 
         for e in data:
@@ -203,4 +214,5 @@ class Converter:
 if __name__ == "__main__":
     c = Converter()
 
-    c.save_combined_json()
+    c.save_combined_csv(input_file_name="datasets/st3_combined_data.json", output_file_name="datasets/st3_combined_data_conv.csv")
+    # c.save_pattern_csv(input_file_name="datasets/st3_combined_data.json")
