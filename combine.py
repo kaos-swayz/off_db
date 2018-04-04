@@ -36,8 +36,6 @@ class Combiner:
         if data == None:
             data = open_json_file(self.combined_data_file_name)
 
-        output = {}
-
         n = 0
         for item in data:
             print("***\nFinding match for: {}, id: {}".format(data[item]["01.main_data"]["name"], item))
@@ -58,7 +56,7 @@ class Combiner:
         if save_data == True:
             if file_name == None:
                 file_name = self.combined_data_file_name
-            save_json_file(file_name=file_name, content=output)
+            save_json_file(file_name=file_name, content=data)
 
     """ matching """
 
@@ -71,7 +69,7 @@ class Combiner:
         for item in data:
             if self.cond_set(item=data[item], source=target_source, type="lease", city=op_city) == True:
                 item_name = data[item]["01.main_data"]["name"]
-                similarity = self.similarity2(a=op_name, b=item_name)
+                similarity = self.similarity(a=op_name, b=item_name)
                 if self.check_similarity(similarity=similarity) == True:
                     temp_results[item] = similarity
 
@@ -115,7 +113,7 @@ class Combiner:
         else:
             return False
 
-    def similarity(self, a, b):
+    def similarity_old(self, a, b):
         phase_cleanup = lambda x: x.replace("phase","").replace("faza","").replace("Phase","").replace("Faza","").replace(" I"," 1").replace(" II"," 2").replace(" III","3").replace(" IV"," 4")
 
         a = phase_cleanup(a)
@@ -125,7 +123,7 @@ class Combiner:
         # return SequenceMatcher(None, a.replace(" ", "").replace("Business",""), b.replace(" ", "").replace("Business","")).ratio()
         return jellyfish.jaro_distance(a, b)
 
-    def similarity2(self, a, b):
+    def similarity(self, a, b):
         a = a.lower()
         b = b.lower()
 
@@ -187,11 +185,22 @@ class Combiner:
         b_own, b_type = deconstruct(b)
 
         # sequence count on own name
-        for i in range(len(a_own) - 1):
-            seq = (a_own[i] + a_own[i + 1])
-            similarity_base += 1
-            if seq in b_own:
-                similarity_count += 1
+        def sequence_count_my(a_own, b_own, similarity_count, similarity_base):
+            for i in range(len(a_own) - 1):
+                seq = (a_own[i] + a_own[i + 1])
+                similarity_base += 1
+                if seq in b_own:
+                    similarity_count += 1
+
+            return similarity_count, similarity_base
+
+        def sequence_count_jaro(a_own, b_own, similarity_count, similarity_base):
+            similarity_count = jellyfish.jaro_distance(a, b) * len(a_own)
+            similarity_base = len(a_own)
+
+            return similarity_count, similarity_base
+
+        similarity_count, similarity_base = sequence_count_jaro(a_own, b_own, similarity_count, similarity_base)
 
         # seqence count on type_name
         for e in a_type:
@@ -242,7 +251,7 @@ class Combiner:
 
         return source_bool and type_bool and city_bool == True
 
-    """ debug """
+    """ DEBUG """
 
     def print_possible_matches(self, temp_results, data):
         print("possible matches:")
@@ -279,4 +288,4 @@ if __name__ == "__main__":
 
     c.find_matching_data(data=data, save_data=True)
 
-    # c.browse_data(data=data)
+    # c.browse_data(data=data, max_iterations=10)
