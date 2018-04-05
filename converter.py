@@ -5,8 +5,76 @@ from difflib import SequenceMatcher
 
 class Converter:
     def __init__(self):
-        pass
 
+        self.item_pattern = {
+            '01.main_data': {
+                'name': '',
+                'type': '',
+                'source': '',
+                'id': '',
+                'match_id': '',
+                'match_level': '',
+                'match_address': '',
+                'match_a_level': '',
+                'record_rating': ''},
+            '02.location_details': {
+                'city': '',
+                'district': '',
+                'address': ''},
+            '03.offer_details': {
+                'av_office': '',
+                'av_office_vol': '',
+                'rent_office': '',
+                'rent_retail': '',
+                'rent_warehouse': '',
+                'service_charge': '',
+                'cost_parking_surface': '',
+                'cost_parking_underground': '',
+                'min_space_to_let': '',
+                'min_lease': '',
+                'add_on_factor': ''},
+            '04.building_details': {
+                'building_status': '',
+                'building_class': '',
+                'total_net_space': '',
+                'total_gross_space': '',
+                'completion_date': '',
+                'ground_floors': '',
+                'underground_floors': '',
+                'floor_plate': '',
+                'no_surface_parking': '',
+                'no_underground_parking': '',
+                'parking_ratio': '',
+                'building_certification': ''},
+            '05.fitout_standard': {
+                'sprinklers': '',
+                'access_control': '',
+                'computer_cabling': '',
+                'switchboard': '',
+                'smoke_detectors': '',
+                'suspended_ceiling': '',
+                'openable_windows': '',
+                'partition_walls': '',
+                'backup_power_supply': '',
+                'telephone_cabling': '',
+                'power_cabling': '',
+                'air_conditioning': '',
+                'raised_floor': '',
+                'carpeting': '',
+                'fibre_optic_connections': '',
+                'BMS': ''},
+            '09.metadata': {
+                'rm_id': '',
+                'rm_url': '',
+                'rm_pic_url': '',
+                'bj_id': '',
+                'bj_url': '',
+                'bj_pic_url': '',
+                'oc_id': '',
+                'oc_url': '',
+                'oc_pic_url': '',
+                'add_info': ''}
+        }
 
 
     """ CSV manipulations: save & open """
@@ -196,9 +264,9 @@ class Converter:
         return output
 
     def determine_value(self, raw_value):
-        if raw_value == "PRAWDA":
+        if raw_value.lower() in ["prawda", "true"]:
             new_value = True
-        elif raw_value == "FAŁSZ":
+        elif raw_value.lower() in ["fałsz", "false"]:
             new_value = False
         else:
             new_value = raw_value
@@ -216,3 +284,4 @@ if __name__ == "__main__":
 
     c.save_combined_csv(input_file_name="datasets/st3_combined_data.json", output_file_name="datasets/st3_combined_data_conv.csv")
     # c.save_pattern_csv(input_file_name="datasets/st3_combined_data.json")
+
