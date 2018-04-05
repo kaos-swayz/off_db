@@ -22,7 +22,7 @@ class Restructor:
                 'match_level': '',
                 'match_address': '',
                 'match_a_level': '',
-                'm_status': ''},
+                'record_rating': ''},
             '02.location_details': {
                 'city': '',
                 'district': '',
@@ -933,7 +933,7 @@ class Restructor:
 
 
 if __name__ == "__main__":
-    r = Restructor("bj")
+    r = Restructor("rm")
     print(len(r.raw_data))
     print(r.name_of_set)
 
