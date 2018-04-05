@@ -1,5 +1,6 @@
 from _main import open_json_file, save_json_file
 
+from copy import deepcopy
 from os import listdir
 from difflib import SequenceMatcher
 
@@ -165,7 +166,7 @@ class Converter:
 
         save_json_file(file_name=output_file_name, content=json_data)
 
-    def convert_data_to_json_format(self, data):
+    def convert_data_to_json_format(self, data, separator=";", max_iterations=9999):
         output = {}
 
         data = data.split("\n")
@@ -230,36 +231,51 @@ class Converter:
             54: "add_info"
         }
 
+        n = 1
         for e in data:
-            item_index = data.index(e)
-            if item_index in range(1,len(data)):
+            # print(e)
+            source_index = data.index(e)
+            # print(source_index)
+            if source_index in range(1,len(data)):
                 # try:
-                item = e.split("|")
-                if len(item) > 5:
-                    output[item_index] = {}
 
-                    output[item_index]["01.main_data"] = {}
-                    output[item_index]["02.location_details"] = {}
-                    output[item_index]["03.offer_details"] = {}
-                    output[item_index]["04.building_details"] = {}
-                    output[item_index]["05.fitout_standard"] = {}
-                    output[item_index]["09.metadata"] = {}
+
+                source = e.split(separator)
+                if len(source) > 5:
+                    item = deepcopy(self.item_pattern)
+
+                    id = self.set_id(set="zhand", n=n)
+                    # print(item)
 
                     for i in el_dict.keys():
-                        if i in range(0, 7):
-                            output[item_index]["01.main_data"][el_dict[i]] = self.determine_value(item[i])
+                        if i in range(0, 3):
+                            item["01.main_data"][el_dict[i]] = self.determine_value(source[i])
+                        elif i in range(3, 6):
+                            pass
+                        elif i == 6:
+                            item["01.main_data"][el_dict[i]] = self.determine_value(source[i])
                         elif i in range(7, 11):
-                            output[item_index]["02.location_details"][el_dict[i]] = self.determine_value(item[i])
+                            item["02.location_details"][el_dict[i]] = self.determine_value(source[i])
                         elif i in range(11, 22):
-                            output[item_index]["03.offer_details"][el_dict[i]] = self.determine_value(item[i])
+                            item["03.offer_details"][el_dict[i]] = self.determine_value(source[i])
                         elif i in range(22, 33):
-                            output[item_index]["04.building_details"][el_dict[i]] = self.determine_value(item[i])
+                            item["04.building_details"][el_dict[i]] = self.determine_value(source[i])
                         elif i in range(33, 49):
-                            output[item_index]["05.fitout_standard"][el_dict[i]] = self.determine_value(item[i])
+                            item["05.fitout_standard"][el_dict[i]] = self.determine_value(source[i])
                         elif i in range(49, 56):
-                            output[item_index]["09.metadata"][el_dict[i]] = self.determine_value(item[i])
+                            item["09.metadata"][el_dict[i]] = self.determine_value(source[i])
+
+                    print(item)
+                    item["01.main_data"]["id"] = id
+                    output[id] = item
+
+                    n += 1
+                    if n == max_iterations:
+                        break
+
+
                 # except IndexError as err:
-                #     print("Exception {} at {}: {}".format(err, item_index, item))
+                #     print("Exception {} at {}: {}".format(err, source_index, item))
 
         return output
 
@@ -273,8 +289,37 @@ class Converter:
 
         return new_value
 
+    def set_id(self, n, set):
+        mode_value = 1000000
+        set_value = 0
+        n_value = n
 
+        if set == "rm"      :   set_value = 170000
+        elif set == "bj"    :   set_value = 230000
+        elif set == "oc"    :   set_value = 840000
+        elif set == "zhand" :   set_value = 910000
 
+        id = mode_value + set_value + n_value
+        return id
+
+    """ debug """
+
+    def browse_data(self, data=None, file_name=None, max_iterations=9999):
+        if file_name == None:
+            file_name = self.restruct_data_output_file
+
+        if data == None:
+            data = open_json_file(file_name)
+
+        n = 0
+        for e in data:
+            n += 1
+            print(n)
+            print(data[e])
+            if n >= max_iterations:
+                break
+
+        return data
 
 
 
@@ -282,6 +327,8 @@ class Converter:
 if __name__ == "__main__":
     c = Converter()
 
-    c.save_combined_csv(input_file_name="datasets/st3_combined_data.json", output_file_name="datasets/st3_combined_data_conv.csv")
+    # c.save_combined_csv(input_file_name="datasets/st3_combined_data.json", output_file_name="datasets/st3_combined_data_conv.csv")
     # c.save_pattern_csv(input_file_name="datasets/st3_combined_data.json")
 
+    c.save_combined_json(input_file_name="datasets/zhand_source2.csv", output_file_name="datasets/st2_restruct_data_zhand.json")
+    c.browse_data(file_name="datasets/st2_restruct_data_zhand.json", max_iterations=10)
