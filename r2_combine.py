@@ -44,6 +44,11 @@ class Combiner:
 
                 self.matching_procedure(operand=data[item], data=data, target_source="rm")
                 self.matching_procedure(operand=data[item], data=data, target_source="oc")
+                self.matching_procedure(operand=data[item], data=data, target_source="zhand")
+
+                self.matching_procedure(operand=data[item], data=data, target_source="rm", match_method="address")
+                self.matching_procedure(operand=data[item], data=data, target_source="oc", match_method="address")
+                self.matching_procedure(operand=data[item], data=data, target_source="zhand", match_method="address")
 
 
             else:
@@ -60,7 +65,7 @@ class Combiner:
 
     """ matching """
 
-    def matching_procedure(self, operand, data, target_source):
+    def matching_procedure(self, operand, data, target_source, match_method="names"):
         op_name = operand["01.main_data"]["name"]
         op_city = operand["02.location_details"]["city"]
 
@@ -69,7 +74,7 @@ class Combiner:
         for item in data:
             if self.cond_set(item=data[item], source=target_source, type="lease", city=op_city) == True:
                 item_name = data[item]["01.main_data"]["name"]
-                similarity = self.similarity(a=op_name, b=item_name)
+                similarity = self.similarity(a=op_name, b=item_name, match_method=match_method)
                 if self.check_similarity(similarity=similarity) == True:
                     temp_results[item] = similarity
 
@@ -78,7 +83,7 @@ class Combiner:
             self.print_possible_matches(temp_results=temp_results, data=data)
 
             match, match_level = self.highest_match(temp_dict=temp_results)
-            self.add_match_data(operand=operand, match=match, match_level=match_level, data=data)
+            self.add_match_data(operand=operand, match=match, match_level=match_level, data=data, match_method=match_method)
 
 
 
@@ -89,17 +94,28 @@ class Combiner:
         # print("max: {}, {}".format(max_id, temp_dict[max_id]["name"]))
         return (max_id, temp_dict[max_id])
 
-    def add_match_data(self, operand, match, match_level, data):
+    def add_match_data(self, operand, match, match_level, data, match_method):
         # print(data[match]["01.main_data"])
 
-        if type(data[match]["01.main_data"]["match_level"]) == float and data[match]["01.main_data"]["match_level"] > match_level:
-            pass
-        else:
-            operand["01.main_data"]["match_id"] = operand["01.main_data"]["id"]
-            operand["01.main_data"]["match_level"] = "self"
+        if match_method == "names":
+            if type(data[match]["01.main_data"]["match_level"]) == float and data[match]["01.main_data"]["match_level"] > match_level:
+                pass
+            else:
+                operand["01.main_data"]["match_id"] = operand["01.main_data"]["id"]
+                operand["01.main_data"]["match_level"] = "self"
 
-            data[match]["01.main_data"]["match_id"] = operand["01.main_data"]["id"]
-            data[match]["01.main_data"]["match_level"] = match_level
+                data[match]["01.main_data"]["match_id"] = operand["01.main_data"]["id"]
+                data[match]["01.main_data"]["match_level"] = match_level
+        elif match_method == "address":
+            if type(data[match]["01.main_data"]["match_a_level"]) == float and data[match]["01.main_data"][
+                "match_a_level"] > match_level:
+                pass
+            else:
+                operand["01.main_data"]["match_address"] = operand["01.main_data"]["id"]
+                operand["01.main_data"]["match_a_level"] = "self"
+
+                data[match]["01.main_data"]["match_address"] = operand["01.main_data"]["id"]
+                data[match]["01.main_data"]["match_a_level"] = match_level
 
     def city_translate(self, city_name):
         return city_name.replace("Gdańsk", "Trójmiasto").replace("Gdynia", "Trójmiasto").replace("Sopot", "Trójmiasto")
@@ -123,53 +139,73 @@ class Combiner:
         # return SequenceMatcher(None, a.replace(" ", "").replace("Business",""), b.replace(" ", "").replace("Business","")).ratio()
         return jellyfish.jaro_distance(a, b)
 
-    def similarity(self, a, b):
+    def similarity(self, a, b, match_method="names"):
         a = a.lower()
         b = b.lower()
 
         similarity_count = 0
         similarity_base = 0
 
-        def deconstruct(name):
+        # list for match methods
+        deconstruct_list_names = [
+            'park',
+            'business',
+            'office',
+            '-',
+            'center',
+            'centrum',
+            '/',
+            'building',
+            'tower',
+            'house',
+            'phase',
+            'point',
+            'plaza',
+            'biuro',
+            'biurowe',
+            'centre',
+            'biznesu',
+            'budynek',
+            "i",
+            "ii",
+            "iii",
+            "iv",
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+        ]
+        deconstruct_list_address = [
+            "Aleja",
+            "ul.",
+            "Street",
+            "Plac",
+            "Cracow",
+            "Warsaw",
+            "al.",
+            "Al.",
+            "pl.",
+            "Aleje"
+        ]
+
+        if match_method == "names":
+            deconstruct_list = deconstruct_list_names
+        elif match_method == "address":
+            deconstruct_list = deconstruct_list_address
+        else:
+            raise Exception("error setting match_method")
+
+        def deconstruct(name, deconstruct_list):
             input = name.lower().split()
             name_list = []
             type_list = []
-
-            deconstruct_list = [
-                'park',
-                'business',
-                'office',
-                '-',
-                'center',
-                'centrum',
-                '/',
-                'building',
-                'tower',
-                'house',
-                'phase',
-                'point',
-                'plaza',
-                'biuro',
-                'biurowe',
-                'centre',
-                'biznesu',
-                'budynek',
-                "i",
-                "ii",
-                "iii",
-                "iv",
-                "a",
-                "b",
-                "c",
-                "d",
-                "e",
-                "f",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-            ]
 
             for e in input:
                 if e in deconstruct_list:
@@ -181,8 +217,8 @@ class Combiner:
             # print("name: {}, type: {}".format(name_list, type_list))
             return name_list, type_list
 
-        a_own, a_type = deconstruct(a)
-        b_own, b_type = deconstruct(b)
+        a_own, a_type = deconstruct(a, deconstruct_list=match_method)
+        b_own, b_type = deconstruct(b, deconstruct_list=match_method)
 
         # sequence count on own name
         def sequence_count_my(a_own, b_own, similarity_count, similarity_base):
@@ -195,8 +231,8 @@ class Combiner:
             return similarity_count, similarity_base
 
         def sequence_count_jaro(a_own, b_own, similarity_count, similarity_base):
-            similarity_count = jellyfish.jaro_distance(a, b) * len(a_own)
-            similarity_base = len(a_own)
+            similarity_count += jellyfish.jaro_distance(a_own, b_own) * len(a_own)
+            similarity_base += len(a_own)
 
             return similarity_count, similarity_base
 
@@ -265,12 +301,19 @@ class Combiner:
         if data == None:
             data = open_json_file(file_name)
 
+        outcome_dict = {}
+
         n = 0
         for e in data:
             n += 1
             print(n)
             if True == True:
                 print(data[e])
+                for e in data[e]['02.location_details']['address'].split():
+                    if e not in outcome_dict.keys():
+                        outcome_dict[e] = 1
+                    else:
+                        outcome_dict[e] += 1
             # if data[e]['01.main_data']['match_id'] == 1230030:
             #     print(data[e])
             # if "lchemia" in data[e]['01.main_data']['name'] and data[e]['01.main_data']['source'] == "oc":
@@ -278,14 +321,19 @@ class Combiner:
             if n >= max_iterations:
                 break
 
-        return data
+        return outcome_dict
+        # return data
 
 
 if __name__ == "__main__":
     c = Combiner()
 
     data = c.combine_data(save_data=False)
-
+    #
     c.find_matching_data(data=data, save_data=True)
 
-    # c.browse_data(data=data, max_iterations=10)
+    c.browse_data(data=data, max_iterations=10)
+    # data = c.browse_data(file_name="datasets/st3_combined_data.json", max_iterations=9999)
+    # for e in data.keys():
+    #     if data[e] > 10:
+    #         print("{} : {}".format(e, data[e]))
