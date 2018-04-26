@@ -1,5 +1,6 @@
 from _main import open_json_file, save_json_file
 
+from time import sleep
 from copy import deepcopy
 from os import listdir
 from difflib import SequenceMatcher
@@ -17,7 +18,7 @@ class Converter:
                 'match_level': '',
                 'match_address': '',
                 'match_a_level': '',
-                'record_rating': ''},
+                'match_rating': ''},
             '02.location_details': {
                 'city': '',
                 'district': '',
@@ -115,10 +116,10 @@ class Converter:
 
     def convert_data_to_csv_format(self, data):
         output_list = []
-        print(data)
+        # print(data)
         for item in data:
 
-            print(item)
+            print("converting data: {} to csv format: {}".format(item, data[item]))
             building_list = []
             for nav_dict in data[item].keys():
                 for key in data[item][nav_dict].keys():
@@ -166,12 +167,8 @@ class Converter:
 
         save_json_file(file_name=output_file_name, content=json_data)
 
-    def convert_data_to_json_format(self, data, separator=";", max_iterations=9999):
+    def convert_data_to_json_format(self, data, separator="|", max_iterations=9999):
         output = {}
-
-        data = data.split("\n")
-
-        # print(data[0])
 
         el_dict = {
             0: "name",
@@ -180,89 +177,102 @@ class Converter:
             3: "id",
             4: "match_id",
             5: "match_level",
-            6: "record_rating",
-            7: "city",
-            8: "district",
-            9: "address",
-            10: "av_office",
-            11: "av_office_vol",
-            12: "rent_office",
-            13: "rent_retail",
-            14: "rent_warehouse",
-            15: "service_charge",
-            16: "cost_parking_surface",
-            17: "cost_parking_underground",
-            18: "min_space_to_let",
-            19: "min_lease",
-            20: "add_on_factor",
-            21: "building_status",
-            22: "building_class",
-            23: "total_net_space",
-            24: "total_gross_space",
-            25: "completion_date",
-            26: "ground_floors",
-            27: "floor_plate",
-            28: "no_surface_parking",
-            29: "no_underground_parking",
-            30: "parking_ratio",
-            31: "building_certification",
-            32: "sprinklers",
-            33: "access_control",
-            34: "computer_cabling",
-            35: "switchboard",
-            36: "smoke_detectors",
-            37: "suspended_ceiling",
-            38: "openable_windows",
-            39: "partition_walls",
-            40: "backup_power_supply",
-            41: "telephone_cabling",
-            42: "power_cabling",
-            43: "air_conditioning",
-            44: "raised_floor",
-            45: "carpeting",
-            46: "fibre_optic_connections",
-            47: "BMS",
-            48: "rm_id",
-            49: "rm_url",
-            50: "rm_pic_url",
-            51: "bj_id",
-            52: "bj_url",
-            53: "bj_pic_url",
-            54: "add_info"
+            6: "match_address",
+            7: "match_a_level",
+            8: "match_rating",
+            9: "city",
+            10: "district",
+            11: "address",
+            12: "av_office",
+            13: "av_office_vol",
+            14: "rent_office",
+            15: "rent_retail",
+            16: "rent_warehouse",
+            17: "service_charge",
+            18: "cost_parking_surface",
+            19: "cost_parking_underground",
+            20: "min_space_to_let",
+            21: "min_lease",
+            22: "add_on_factor",
+            23: "building_status",
+            24: "building_class",
+            25: "total_net_space",
+            26: "total_gross_space",
+            27: "completion_date",
+            28: "ground_floors",
+            29: "underground_floors",
+            30: "floor_plate",
+            31: "no_surface_parking",
+            32: "no_underground_parking",
+            33: "parking_ratio",
+            34: "building_certification",
+            35: "sprinklers",
+            36: "access_control",
+            37: "computer_cabling",
+            38: "switchboard",
+            39: "smoke_detectors",
+            40: "suspended_ceiling",
+            41: "openable_windows",
+            42: "partition_walls",
+            43: "backup_power_supply",
+            44: "telephone_cabling",
+            45: "power_cabling",
+            46: "air_conditioning",
+            47: "raised_floor",
+            48: "carpeting",
+            49: "fibre_optic_connections",
+            50: "BMS",
+            51: "rm_id",
+            52: "rm_url",
+            53: "rm_pic_url",
+            54: "bj_id",
+            55: "bj_url",
+            56: "bj_pic_url",
+            57: "oc_id",
+            58: "oc_url",
+            59: "oc_pic_url",
+            60: "add_info"
         }
+
+        data = data.split("\n")
+
+        # csv_pattern = data[0].split(separator)
+        #
+        # print("csv pattern: {}".format(csv_pattern))
+        #
+        # for index in range(len(csv_pattern)):
+        #     print('{}: "{}",'.format(index, csv_pattern[index]))
 
         n = 1
         for e in data:
             # print(e)
             source_index = data.index(e)
-            # print(source_index)
+            print("source index: {}".format(source_index))
             if source_index in range(1,len(data)):
                 # try:
 
 
                 source = e.split(separator)
                 if len(source) > 5:
+                    # print("source: {}".format(source))
+
                     item = deepcopy(self.item_pattern)
 
-                    id = self.set_id(set="zhand", n=n)
+                    id = source[3]
                     # print(item)
 
                     for i in el_dict.keys():
-                        if i in range(0, 3):
+                        if i in range(0, 9):
                             item["01.main_data"][el_dict[i]] = self.determine_value(source[i])
-                        elif i in range(3, 6):
-                            pass
-                        elif i == 6:
-                            item["01.main_data"][el_dict[i]] = self.determine_value(source[i])
-                        elif i in range(7, 11):
+                        elif i in range(9, 12):
                             item["02.location_details"][el_dict[i]] = self.determine_value(source[i])
-                        elif i in range(11, 22):
+                        elif i in range(12, 23):
                             item["03.offer_details"][el_dict[i]] = self.determine_value(source[i])
-                        elif i in range(22, 33):
+                        elif i in range(23, 35):
                             item["04.building_details"][el_dict[i]] = self.determine_value(source[i])
-                        elif i in range(33, 49):
+                        elif i in range(35, 51):
                             item["05.fitout_standard"][el_dict[i]] = self.determine_value(source[i])
-                        elif i in range(49, 56):
+                        elif i in range(51, 61):
                             item["09.metadata"][el_dict[i]] = self.determine_value(source[i])
 
                     print(item)
@@ -315,7 +325,7 @@ class Converter:
         for e in data:
             n += 1
             print(n)
-            print(data[e])
+            print("{}: {}".format(e, data[e]))
             if n >= max_iterations:
                 break
 
@@ -330,5 +340,5 @@ if __name__ == "__main__":
     # c.save_combined_csv(input_file_name="datasets/st3_combined_data.json", output_file_name="datasets/st3_combined_data_conv.csv")
     # c.save_pattern_csv(input_file_name="datasets/st3_combined_data.json")
 
-    c.save_combined_json(input_file_name="datasets/zhand_source2.csv", output_file_name="datasets/st2_restruct_data_zhand.json")
-    c.browse_data(file_name="datasets/st2_restruct_data_zhand.json", max_iterations=10)
+    c.save_combined_json(input_file_name="datasets/st4_combined_data_to_merge.csv", output_file_name="datasets/st4_to_merge.json")
+    # c.browse_data(file_name="datasets/st4_to_merge.json", max_iterations=120)
