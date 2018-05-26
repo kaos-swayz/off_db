@@ -108,6 +108,7 @@ class Restructor:
         return e[index:]
 
     def return_true_if_input(self, e, input):
+        # used specificaly to find if theres certain value in item list - e.g. for technical specification
         for i in e:
             if type(i) == str:
                 if input in i.lower():
@@ -303,8 +304,11 @@ class Restructor:
     # item["03.offer_details"]["av_office"] = ""
     def s_03_av_office(self, e, set):
         if set == "rm":
-            return not self.return_true_if_input(
-                e[self.get_index_based_on_input(e, "Total available office area".lower())], input=" 0 ")
+            value = e[self.get_index_based_on_input(e, "Total available office area".lower())]
+            if " 0 " in value:
+                return False
+            else:
+                return True
         elif set == "bj":
             return not self.return_true_if_input(e, input="Leased".lower())
         elif set == "oc":
