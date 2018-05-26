@@ -337,8 +337,8 @@ class Converter:
 if __name__ == "__main__":
     c = Converter()
 
-    # c.save_combined_csv(input_file_name="datasets/st3_combined_data.json", output_file_name="datasets/st3_combined_data_conv.csv")
+    c.save_combined_csv(input_file_name="datasets/st6_bug_fixed_data.json", output_file_name="datasets/st6_bug_fixed_data_conv.csv")
     # c.save_pattern_csv(input_file_name="datasets/st3_combined_data.json")
 
-    c.save_combined_json(input_file_name="datasets/st4_combined_data_to_merge.csv", output_file_name="datasets/st4_to_merge.json")
+    # c.save_combined_json(input_file_name="datasets/st4_combined_data_to_merge.csv", output_file_name="datasets/st4_to_merge.json")
     # c.browse_data(file_name="datasets/st4_to_merge.json", max_iterations=120)
