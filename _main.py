@@ -29,6 +29,7 @@ def save_json_file(file_name, content):
 def open_json_file(file_name):
     with open(file_name, "r", encoding="UTF8") as fp:
         data = json.loads(fp.read())
+        print("opened file: {}".format(file_name))
     return data
 
 
