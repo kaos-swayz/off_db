@@ -68,19 +68,28 @@ class Combiner:
     def matching_procedure(self, operand, data, target_source, match_method="names"):
         op_name = operand["01.main_data"]["name"]
         op_city = operand["02.location_details"]["city"]
+        op_address = operand["02.location_details"]["address"]
 
         temp_results = {}
 
         for item in data:
             if self.cond_set(item=data[item], source=target_source, type="lease", city=op_city) == True:
-                item_name = data[item]["01.main_data"]["name"]
-                similarity = self.similarity(a=op_name, b=item_name, match_method=match_method)
-                if self.check_similarity(similarity=similarity) == True:
-                    temp_results[item] = similarity
+                if match_method == "names":
+                    item_name = data[item]["01.main_data"]["name"]
+                    similarity = self.similarity(a=op_name, b=item_name, match_method=match_method)
+                    if self.check_similarity(similarity=similarity) == True:
+                        temp_results[item] = similarity
+                elif match_method == "address":
+                    item_address = data[item]["02.location_details"]["address"]
+                    similarity = self.similarity(a=op_address, b=item_address, match_method=match_method)
+                    if self.check_similarity(similarity=similarity) == True:
+                        temp_results[item] = similarity
+                else:
+                    raise Exception("match method not met")
 
         if len(temp_results.keys()) > 0:
             # debug
-            self.print_possible_matches(temp_results=temp_results, data=data)
+            self.print_possible_matches(temp_results=temp_results, data=data, match_method=match_method)
 
             match, match_level = self.highest_match(temp_dict=temp_results)
             self.add_match_data(operand=operand, match=match, match_level=match_level, data=data, match_method=match_method)
@@ -140,8 +149,11 @@ class Combiner:
         return jellyfish.jaro_distance(a, b)
 
     def similarity(self, a, b, match_method="names"):
-        a = a.lower()
-        b = b.lower()
+        if len(a) > 0 and len(b) > 0:
+            a = a.lower()
+            b = b.lower()
+        else:
+            return 0
 
         similarity_count = 0
         similarity_base = 0
@@ -236,7 +248,12 @@ class Combiner:
 
             return similarity_count, similarity_base
 
-        similarity_count, similarity_base = sequence_count_jaro(a_own, b_own, similarity_count, similarity_base)
+        if match_method == "names":
+            similarity_count, similarity_base = sequence_count_my(a_own, b_own, similarity_count, similarity_base)
+        elif match_method == "address":
+            similarity_count, similarity_base = sequence_count_jaro(a_own, b_own, similarity_count, similarity_base)
+        else:
+            raise Exception("match method error")
 
         # seqence count on type_name
         for e in a_type:
@@ -289,8 +306,8 @@ class Combiner:
 
     """ DEBUG """
 
-    def print_possible_matches(self, temp_results, data):
-        print("possible matches:")
+    def print_possible_matches(self, temp_results, data, match_method):
+        print("possible matches for {} test:".format(match_method))
         for item in temp_results.keys():
             print("{}: {}".format(data[item]["01.main_data"]["name"], temp_results[item]))
 
@@ -304,21 +321,26 @@ class Combiner:
         outcome_dict = {}
 
         n = 0
+        n1 = 0
         for e in data:
-            n += 1
-            print(n)
-            if True == True:
+
+            # if True == True:
+            #     print(data[e])
+                # for e in data[e]['02.location_details']['address'].split():
+                #     if e not in outcome_dict.keys():
+                #         outcome_dict[e] = 1
+                #     else:
+                #         outcome_dict[e] += 1
+            if data[e]['01.main_data']['source'] == "rm" and n <= max_iterations:
                 print(data[e])
-                for e in data[e]['02.location_details']['address'].split():
-                    if e not in outcome_dict.keys():
-                        outcome_dict[e] = 1
-                    else:
-                        outcome_dict[e] += 1
-            # if data[e]['01.main_data']['match_id'] == 1230030:
-            #     print(data[e])
-            # if "lchemia" in data[e]['01.main_data']['name'] and data[e]['01.main_data']['source'] == "oc":
-            #     print(data[e])
-            if n >= max_iterations:
+                n += 1
+
+            if data[e]['01.main_data']['source'] == "zhand":
+                print(data[e])
+                n1 += 1
+
+
+            if n1 >= max_iterations:
                 break
 
         return outcome_dict
